@@ -1,0 +1,13 @@
+/.agents/
+/.codex/
+/.idea/
+/.nyc_output/
+/.vscode/
+/ctx/
+/dist/
+/jsdoc/
+/node_modules/
+/tmp/
+/**/*.env
+/**/output*.md
+/**/output*.zip
