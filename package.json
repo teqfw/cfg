@@ -2,29 +2,66 @@
   "name": "@teqfw/cfg",
   "version": "0.1.0",
   "description": "Configuration package for Tequila Framework applications: load .env files and provide typed configuration through the DI container.",
-  "keywords": ["configuration", "config", "env", "dotenv", "teqfw", "tequila framework"],
+  "keywords": [
+    "configuration",
+    "config",
+    "env",
+    "dotenv",
+    "teqfw",
+    "tequila framework"
+  ],
   "homepage": "https://github.com/teqfw/cfg#readme",
-  "bugs": {"url": "https://github.com/teqfw/cfg/issues"},
+  "bugs": {
+    "url": "https://github.com/teqfw/cfg/issues"
+  },
   "license": "Apache-2.0",
   "author": {
     "name": "Alex Gusev",
     "email": "alex@flancer64.com",
     "url": "https://github.com/flancer64"
   },
-  "files": ["ai/", "LICENSE", "src/", "CHANGELOG.md", "jsconfig.json", "README.md", "types.d.ts"],
+  "files": [
+    "ai/",
+    "LICENSE",
+    "src/",
+    "CHANGELOG.md",
+    "jsconfig.json",
+    "README.md",
+    "types.d.ts"
+  ],
+  "types": "types.d.ts",
   "type": "module",
   "teqfw": {
     "namespaces": [
-      {"prefix": "TeqFw_Cfg_", "path": "./src", "ext": ".mjs"}
+      {
+        "prefix": "TeqFw_Cfg_",
+        "path": "./src",
+        "ext": ".mjs"
+      }
     ]
   },
-  "repository": {"type": "git", "url": "git+https://github.com/teqfw/cfg.git"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teqfw/cfg.git"
+  },
   "scripts": {
     "test:unit": "find test/unit -name '*.test.mjs' -print0 | xargs -0 node --test",
     "test:integration": "find test/integration -name '*.test.mjs' -print0 | xargs -0 node --test",
     "test:publish": "find test/publish -name '*.test.mjs' -print0 | xargs -0 node --test",
     "test": "npm run test:unit && npm run test:integration && npm run test:publish"
   },
-  "engines": {"node": ">=20"},
-  "funding": {"type": "individual", "url": "https://github.com/sponsors/teqfw"}
+  "engines": {
+    "node": ">=20"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/teqfw"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
+  }
 }
