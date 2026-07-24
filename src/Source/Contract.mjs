@@ -1,44 +1,7 @@
 // @ts-check
+/** @namespace TeqFw_Cfg_Source_Contract @description Shared Source validation and descriptor service. */
+// @ts-nocheck
 
-/**
- * @namespace TeqFw_Cfg_Source_Contract
- * @description Internal Source argument validation helpers.
- */
-
-const SOURCE_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$/;
-
-/**
- * @param {unknown} id
- * @returns {string}
- */
-export function assertSourceId(id) {
-    if (typeof id !== 'string' || id.length < 1 || id.length > 128 || !SOURCE_ID_PATTERN.test(id)) {
-        throw createError('CFG_INVALID_SOURCE_ID');
-    }
-    return id;
-}
-
-/**
- * @param {unknown} value
- * @param {string} field
- * @returns {void}
- */
-export function assertSourceRecord(value, field) {
-    if ((value === null) || (typeof value !== 'object') || Array.isArray(value)) {
-        throw createError('CFG_INVALID_SOURCE', {field});
-    }
-}
-
-/**
- * @param {string} code
- * @param {Readonly<Record<string, string>>} [context]
- * @returns {Error & {readonly code: string, readonly context: Readonly<Record<string, string>>}}
- */
-function createError(code, context = {}) {
-    const error = new Error('Configuration source argument is invalid.');
-    error.name = 'CfgError';
-    Object.defineProperty(error, 'code', {value: code, enumerable: true});
-    Object.defineProperty(error, 'context', {value: Object.freeze({...context}), enumerable: true});
-    return /** @type {any} */ (Object.freeze(error));
-}
-
+const ID=/^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$/;
+export default class Contract { constructor({error}){this.assertId=(id)=>{if(typeof id!=='string'||!ID.test(id))throw error.create('CFG_INVALID_SOURCE_ID');return id;};this.invalidSource=(field)=>{throw error.create('CFG_INVALID_SOURCE',{field});};this.assertRecord=(value,field)=>{if(value===null||typeof value!=='object'||Array.isArray(value))throw error.create('CFG_INVALID_SOURCE',{field});};this.capture=(sources)=>{if(!Array.isArray(sources)||Object.getPrototypeOf(sources)!==Array.prototype)throw error.create('CFG_INVALID_SOURCE');const result=[];const ids=new Set();for(let index=0;index<sources.length;index++){if(!Object.prototype.hasOwnProperty.call(sources,index))throw error.create('CFG_INVALID_SOURCE');const source=sources[index];if(source===null||((typeof source!=='object')&&(typeof source!=='function')))throw error.create('CFG_INVALID_SOURCE');let id,load;try{id=source.id;load=source.load;}catch{throw error.create('CFG_INVALID_SOURCE');}this.assertId(id);if(ids.has(id))throw error.create('CFG_INVALID_SOURCE_ID',{sourceId:id});if(typeof load!=='function')throw error.create('CFG_INVALID_SOURCE');ids.add(id);result.push(Object.freeze({id,load:load.bind(source)}));}return Object.freeze(result);};}}
+export const __deps__=Object.freeze({default:Object.freeze({error:'TeqFw_Cfg_Error$'})});

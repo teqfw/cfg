@@ -1,0 +1,3 @@
+// @ts-nocheck
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
+const modules=['Loader','Reader','Store','Source/Object','Source/ProcessEnv','Source/DotenvFile'];test('DI namespace maps documented module addresses',async()=>{const pkg=JSON.parse(await readFile('package.json'));assert.deepEqual(pkg.teqfw.namespaces,[{prefix:'TeqFw_Cfg_',path:'./src',ext:'.mjs'}]);for(const name of modules){const module=await import('../../src/'+name+'.mjs');assert.equal(typeof module.default,'function');assert.ok(module.__deps__||name==='Store'||name.startsWith('Source/'));}});

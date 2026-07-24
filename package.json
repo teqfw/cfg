@@ -45,9 +45,9 @@
     "url": "git+https://github.com/teqfw/cfg.git"
   },
   "scripts": {
-    "test:unit": "find test/unit -name '*.test.mjs' -print0 | xargs -0 node --test",
-    "test:integration": "find test/integration -name '*.test.mjs' -print0 | xargs -0 node --test",
-    "test:publish": "find test/publish -name '*.test.mjs' -print0 | xargs -0 node --test",
+    "test:unit": "node test/run-suite.mjs unit",
+    "test:integration": "node test/run-suite.mjs integration",
+    "test:publish": "node test/run-suite.mjs publish",
     "test": "npm run test:unit && npm run test:integration && npm run test:publish"
   },
   "engines": {
@@ -57,9 +57,7 @@
     "type": "individual",
     "url": "https://github.com/sponsors/teqfw"
   },
-  "dependencies": {
-    "dotenv": "^16.4.7"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^26.1.1",
     "typescript": "^7.0.2"

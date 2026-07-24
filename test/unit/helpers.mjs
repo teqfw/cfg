@@ -1,45 +1,4 @@
 // @ts-nocheck
-
-import assert from 'node:assert/strict';
-import {setTimeout as delay} from 'node:timers/promises';
-import Store from '../../src/Store.mjs';
-import Loader from '../../src/Loader.mjs';
-import Reader from '../../src/Reader.mjs';
-
-/** @returns {{promise: Promise<unknown>, resolve: (value?: unknown) => void, reject: (reason?: unknown) => void}} */
-export function deferred() {
-    /** @type {(value?: unknown) => void} */
-    let resolve;
-    /** @type {(reason?: unknown) => void} */
-    let reject;
-    const promise = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-    });
-    return {promise, resolve, reject};
-}
-
-/**
- * @param {ReadonlyArray<{id: string, load: () => Promise<readonly TeqFw_Cfg_RawEntry[]>}>} sources
- * @returns {{store: TeqFw_Cfg_Store$, loader: TeqFw_Cfg_Loader$, reader: TeqFw_Cfg_Reader$}}
- */
-export function createHarness(sources = []) {
-    const store = new Store();
-    const loader = new Loader({store});
-    const reader = new Reader({store});
-    if (sources.length > 0) void loader.load(sources);
-    return {store, loader, reader};
-}
-
-/**
- * @param {Promise<unknown>} promise
- * @param {string} code
- * @returns {Promise<unknown>}
- */
-export async function assertCode(promise, code) {
-    await assert.rejects(promise, (error) => error?.code === code);
-    return undefined;
-}
-
-export {assert, delay};
-
+import ErrorService from '../../src/Error.mjs';import Key from '../../src/Key.mjs';import Raw from '../../src/Raw.mjs';import Contract from '../../src/Source/Contract.mjs';import Parser from '../../src/Source/DotenvParser.mjs';import Store from '../../src/Store.mjs';import Loader from '../../src/Loader.mjs';import Reader from '../../src/Reader.mjs';import ObjectFactory from '../../src/Source/Object.mjs';import ProcessFactory from '../../src/Source/ProcessEnv.mjs';import DotenvFactory from '../../src/Source/DotenvFile.mjs';
+export function services(){const error=new ErrorService();const key=new Key({error});const raw=new Raw({error});const contract=new Contract({error});const parser=new Parser();const store=new Store({error,raw});const loader=new Loader({error,key,raw,contract,store});const reader=new Reader({error,key,raw,store});return {error,key,raw,contract,parser,store,loader,reader,object:new ObjectFactory({contract}),processEnv:new ProcessFactory({contract,key}),dotenv:new DotenvFactory({contract,key,parser})};}
+export function source(id,entries){return Object.freeze({id,load:async()=>entries});}export function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return {promise,resolve,reject};}export async function assertCode(promise,code){await assert.rejects(promise,e=>e?.code===code);}import assert from 'node:assert/strict';export {assert};
