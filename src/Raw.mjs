@@ -1,6 +1,5 @@
 // @ts-check
 /** @namespace TeqFw_Cfg_Raw @description Internal RawValue validation, copying, and freezing service. */
-// @ts-nocheck
 
 export default class Raw { constructor({error}){this.copy=(value)=>{try{return copy(value,new WeakSet(),error);}catch(reason){if(error.is(reason))throw reason;throw error.create('CFG_INVALID_RAW_VALUE');}};this.copySnapshot=(entries)=>{if(!isPlainRecord(entries)||Object.getOwnPropertySymbols(entries).length)throw error.create('CFG_INVALID_ENTRY');const result={};for(const key of Object.getOwnPropertyNames(entries)){const descriptor=Object.getOwnPropertyDescriptor(entries,key);if(!descriptor||!descriptor.enumerable||!('value'in descriptor))throw error.create('CFG_INVALID_ENTRY');Object.defineProperty(result,key,{value:this.copy(descriptor.value),enumerable:true,writable:true,configurable:true});}return result;};this.deepFreeze=(value)=>freeze(value,new WeakSet());}}
 function isPlainRecord(value){const proto=value&&typeof value==='object'&&Object.getPrototypeOf(value);return value!==null&&typeof value==='object'&&!Array.isArray(value)&&(proto===Object.prototype||proto===null);}

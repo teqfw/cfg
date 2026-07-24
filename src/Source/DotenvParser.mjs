@@ -1,31 +1,62 @@
 // @ts-check
 /** @namespace TeqFw_Cfg_Source_DotenvParser @description Deterministic internal dotenv grammar parser. */
-// @ts-nocheck
 
 export default function DotenvParser() {
-    this.parse = function(text) {
+    /** @param {string} text @returns {Record<string, string>} */
+    this.parse = function (text) {
         if (typeof text !== 'string') throw new TypeError('text');
         const source = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
-        const lines = []; let current = ''; let quote = null;
-        for (const char of source) {
-            if (quote) { if (char === quote) { current += char; quote = null; } else current += char === '\n' ? '\n' : char; }
-            else if (char === '\n') { lines.push(current); current = ''; }
-            else { if (char === "'" || char === '"') quote = char; current += char; }
-        }
-        if (quote) throw new Error('unclosed quote');
-        lines.push(current);
         const result = new Map();
-        for (const line of lines) {
-            const trimmed = line.trim(); if (!trimmed || trimmed.startsWith('#')) continue;
-            const match = /^(?:(export)(\s+))?([^\s=]+)\s*=\s*(.*)$/.exec(line.trimStart().replace(/\r$/, ''));
-            if (!match) throw new Error('malformed assignment');
-            result.set(match[3], parseValue(match[4]));
+        let index = 0;
+        while (index < source.length) {
+            while (source[index] === ' ' || source[index] === '\t') index++;
+            if (source[index] === '\n' || source[index] === '\r') { index = skipNewline(source, index); continue; }
+            if (source[index] === '#') { index = skipLine(source, index); continue; }
+            if (source.startsWith('export', index) && isWhitespace(source[index + 6])) {
+                index += 6;
+                while (source[index] === ' ' || source[index] === '\t') index++;
+            }
+            const nameStart = index;
+            while (index < source.length && source[index] !== '=' && !isWhitespace(source[index])) index++;
+            if (index === nameStart) throw new Error('malformed assignment');
+            const name = source.slice(nameStart, index);
+            while (source[index] === ' ' || source[index] === '\t') index++;
+            if (source[index] !== '=') throw new Error('malformed assignment');
+            index++;
+            while (source[index] === ' ' || source[index] === '\t') index++;
+            const parsed = readValue(source, index);
+            result.set(name, parsed.value);
+            index = parsed.index;
         }
         return Object.fromEntries(result);
     };
 }
-function parseValue(raw) {
-    if (raw.startsWith("'")) { const end = raw.indexOf("'", 1); if (end < 0 || (raw.slice(end + 1).trim() && !raw.slice(end + 1).trim().startsWith('#'))) throw new Error('malformed quote'); return raw.slice(1, end); }
-    if (raw.startsWith('"')) { let value = ''; let closed = false; for (let index = 1; index < raw.length; index++) { const char = raw[index]; if (char === '"') { closed = true; if (raw.slice(index + 1).trim() && !raw.slice(index + 1).trim().startsWith('#')) throw new Error('malformed quote'); break; } if (char === '\\') { const escaped = raw[++index]; const values = {'\\':'\\','"':'"',n:'\n',r:'\r',t:'\t'}; if (!(escaped in values)) throw new Error('unsupported escape'); value += values[escaped]; } else value += char; } if (!closed) throw new Error('unclosed quote'); return value; }
-    const comment = raw.indexOf('#'); return (comment < 0 ? raw : raw.slice(0, comment)).trim();
+function isWhitespace(char) { return char === ' ' || char === '\t' || char === '\r' || char === '\n'; }
+function skipNewline(source, index) { return source[index] === '\r' && source[index + 1] === '\n' ? index + 2 : index + 1; }
+function skipLine(source, index) { while (index < source.length && source[index] !== '\n' && source[index] !== '\r') index++; return index; }
+function readValue(source, index) {
+    const quote = source[index];
+    if (quote !== "'" && quote !== '"') {
+        const start = index;
+        while (index < source.length && source[index] !== '\n' && source[index] !== '\r' && source[index] !== '#') index++;
+        return {value: source.slice(start, index).trim(), index: skipLine(source, index)};
+    }
+    index++;
+    let value = '';
+    while (index < source.length) {
+        const char = source[index++];
+        if (char === quote) {
+            while (source[index] === ' ' || source[index] === '\t') index++;
+            if (source[index] && source[index] !== '#' && source[index] !== '\n' && source[index] !== '\r') throw new Error('malformed quote');
+            return {value, index: skipLine(source, index)};
+        }
+        if (char === '\r' || char === '\n') { value += '\n'; if (char === '\r' && source[index] === '\n') index++; }
+        else if (quote === '"' && char === '\\') {
+            const escaped = source[index++];
+            const escapes = {'\\': '\\', '"': '"', n: '\n', r: '\r', t: '\t'};
+            if (!(escaped in escapes)) throw new Error('unsupported escape');
+            value += escapes[escaped];
+        } else value += char;
+    }
+    throw new Error('unclosed quote');
 }
