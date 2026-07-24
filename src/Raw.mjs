@@ -1,44 +1,148 @@
 // @ts-check
 /** @namespace TeqFw_Cfg_Raw @description Internal RawValue validation, copying, and freezing service. */
 
-export default class Raw { /**
- * @param {object} deps
- * @param {object} deps.error
- */
-constructor({error}){/**
- * @param {any} value
- * @returns {any}
- */
-this.copy=(value)=>{try{return copy(value,new WeakSet(),error);}catch(reason){if(error.is(reason))throw reason;throw error.create('CFG_INVALID_RAW_VALUE');}};/**
- * @param {any} entries
- * @returns {any}
- */
-this.copySnapshot=(entries)=>{if(!isPlainRecord(entries)||Object.getOwnPropertySymbols(entries).length)throw error.create('CFG_INVALID_ENTRY');const result={};for(const key of Object.getOwnPropertyNames(entries)){const descriptor=Object.getOwnPropertyDescriptor(entries,key);if(!descriptor||!descriptor.enumerable||!('value'in descriptor))throw error.create('CFG_INVALID_ENTRY');Object.defineProperty(result,key,{value:this.copy(descriptor.value),enumerable:true,writable:true,configurable:true});}return result;};/**
- * @param {any} value
- * @returns {any}
- */
-this.deepFreeze=(value)=>freeze(value,new WeakSet());}}
+export default class Raw {
+  /**
+   * @param {object} deps
+   * @param {object} deps.error
+   */
+  constructor({ error }) {
+    /**
+     * @param {any} value
+     * @returns {any}
+     */
+    this.copy = (value) => {
+      try {
+        return copy(value, new WeakSet(), error);
+      } catch (reason) {
+        if (error.is(reason)) throw reason;
+        throw error.create("CFG_INVALID_RAW_VALUE");
+      }
+    }; /**
+     * @param {any} entries
+     * @returns {any}
+     */
+    this.copySnapshot = (entries) => {
+      if (
+        !isPlainRecord(entries) ||
+        Object.getOwnPropertySymbols(entries).length
+      )
+        throw error.create("CFG_INVALID_ENTRY");
+      const result = {};
+      for (const key of Object.getOwnPropertyNames(entries)) {
+        const descriptor = Object.getOwnPropertyDescriptor(entries, key);
+        if (!descriptor || !descriptor.enumerable || !("value" in descriptor))
+          throw error.create("CFG_INVALID_ENTRY");
+        Object.defineProperty(result, key, {
+          value: this.copy(descriptor.value),
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+      }
+      return result;
+    }; /**
+     * @param {any} value
+     * @returns {any}
+     */
+    this.deepFreeze = (value) => freeze(value, new WeakSet());
+  }
+}
 /**
  * @param {any} value
  * @returns {any}
  */
-function isPlainRecord(value){const proto=value&&typeof value==='object'&&Object.getPrototypeOf(value);return value!==null&&typeof value==='object'&&!Array.isArray(value)&&(proto===Object.prototype||proto===null);}
+function isPlainRecord(value) {
+  const proto =
+    value && typeof value === "object" && Object.getPrototypeOf(value);
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    (proto === Object.prototype || proto === null)
+  );
+}
 /**
  * @param {any} error
  * @returns {any}
  */
-function invalid(error){throw error.create('CFG_INVALID_RAW_VALUE');}
+function invalid(error) {
+  throw error.create("CFG_INVALID_RAW_VALUE");
+}
 /**
  * @param {any} value
  * @param {any} active
  * @param {any} error
  * @returns {any}
  */
-function copy(value,active,error){if(value===null||typeof value==='string'||typeof value==='boolean'||(typeof value==='number'&&Number.isFinite(value)))return value;if(typeof value!=='object'||active.has(value))invalid(error);active.add(value);try{if(Array.isArray(value)){if(Object.getPrototypeOf(value)!==Array.prototype||Object.getOwnPropertySymbols(value).length)invalid(error);const descriptors=Object.getOwnPropertyDescriptors(value);const length=descriptors.length?.value;if(!Number.isSafeInteger(length)||length<0||Object.keys(descriptors).some((name)=>name!=='length'&&(!/^\d+$/.test(name)||Number(name)>=length)))invalid(error);const result=[];for(let index=0;index<length;index++){const descriptor=descriptors[index];if(!descriptor||!descriptor.enumerable||!('value'in descriptor))invalid(error);result.push(copy(descriptor.value,active,error));}return result;}if(!isPlainRecord(value)||Object.getOwnPropertySymbols(value).length)invalid(error);const result={};for(const name of Object.getOwnPropertyNames(value)){const descriptor=Object.getOwnPropertyDescriptor(value,name);if(!descriptor||!descriptor.enumerable||!('value'in descriptor))invalid(error);Object.defineProperty(result,name,{value:copy(descriptor.value,active,error),enumerable:true,writable:true,configurable:true});}return result;}finally{active.delete(value);}}
+function copy(value, active, error) {
+  if (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "boolean" ||
+    (typeof value === "number" && Number.isFinite(value))
+  )
+    return value;
+  if (typeof value !== "object" || active.has(value)) invalid(error);
+  active.add(value);
+  try {
+    if (Array.isArray(value)) {
+      if (
+        Object.getPrototypeOf(value) !== Array.prototype ||
+        Object.getOwnPropertySymbols(value).length
+      )
+        invalid(error);
+      const descriptors = Object.getOwnPropertyDescriptors(value);
+      const length = descriptors.length?.value;
+      if (
+        !Number.isSafeInteger(length) ||
+        length < 0 ||
+        Object.keys(descriptors).some(
+          (name) =>
+            name !== "length" &&
+            (!/^\d+$/.test(name) || Number(name) >= length),
+        )
+      )
+        invalid(error);
+      const result = [];
+      for (let index = 0; index < length; index++) {
+        const descriptor = descriptors[index];
+        if (!descriptor || !descriptor.enumerable || !("value" in descriptor))
+          invalid(error);
+        result.push(copy(descriptor.value, active, error));
+      }
+      return result;
+    }
+    if (!isPlainRecord(value) || Object.getOwnPropertySymbols(value).length)
+      invalid(error);
+    const result = {};
+    for (const name of Object.getOwnPropertyNames(value)) {
+      const descriptor = Object.getOwnPropertyDescriptor(value, name);
+      if (!descriptor || !descriptor.enumerable || !("value" in descriptor))
+        invalid(error);
+      Object.defineProperty(result, name, {
+        value: copy(descriptor.value, active, error),
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+    }
+    return result;
+  } finally {
+    active.delete(value);
+  }
+}
 /**
  * @param {any} value
  * @param {any} seen
  * @returns {any}
  */
-function freeze(value,seen){if(!value||typeof value!=='object'||seen.has(value))return value;seen.add(value);for(const child of Object.values(value))freeze(child,seen);return Object.freeze(value);}
-export const __deps__=Object.freeze({default:Object.freeze({error:'TeqFw_Cfg_Error$'})});
+function freeze(value, seen) {
+  if (!value || typeof value !== "object" || seen.has(value)) return value;
+  seen.add(value);
+  for (const child of Object.values(value)) freeze(child, seen);
+  return Object.freeze(value);
+}
+export const __deps__ = Object.freeze({
+  default: Object.freeze({ error: "TeqFw_Cfg_Error$" }),
+});
