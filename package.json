@@ -47,8 +47,9 @@
   "scripts": {
     "test:unit": "node test/run-suite.mjs unit",
     "test:integration": "node test/run-suite.mjs integration",
+    "test:acceptance": "node test/run-suite.mjs acceptance",
     "test:publish": "node test/run-suite.mjs publish",
-    "test": "npm run test:unit && npm run test:integration && npm run test:publish"
+    "test": "npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish"
   },
   "engines": {
     "node": ">=20"
@@ -57,8 +58,8 @@
     "type": "individual",
     "url": "https://github.com/sponsors/teqfw"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@teqfw/di": "^2.7.0",
     "@types/node": "^26.1.1",
     "typescript": "^7.0.2"
   }
