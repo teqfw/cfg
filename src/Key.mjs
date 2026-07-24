@@ -7,7 +7,7 @@ const COMPLETE = new RegExp("^(" + SEGMENT + ")__(" + SEGMENT + ")$");
 export default class Key {
   /**
    * @param {object} deps
-   * @param {object} deps.error
+   * @param {TeqFw_Cfg_Error$} deps.error
    */
   constructor({ error }) {
     /**

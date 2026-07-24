@@ -4,11 +4,11 @@
 export default class Loader {
   /**
    * @param {object} deps
-   * @param {object} deps.error
-   * @param {object} deps.key
-   * @param {object} deps.raw
-   * @param {object} deps.contract
-   * @param {object} deps.store
+   * @param {TeqFw_Cfg_Error$} deps.error
+   * @param {TeqFw_Cfg_Key$} deps.key
+   * @param {TeqFw_Cfg_Raw$} deps.raw
+   * @param {TeqFw_Cfg_Source_Contract$} deps.contract
+   * @param {TeqFw_Cfg_Store$} deps.store
    */
   constructor({ error, key, raw, contract, store }) {
     let operation; /**

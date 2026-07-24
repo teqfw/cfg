@@ -4,9 +4,9 @@
 export default class DotenvFileSource {
   /**
    * @param {object} deps
-   * @param {object} deps.contract
-   * @param {object} deps.key
-   * @param {object} deps.parser
+   * @param {TeqFw_Cfg_Source_Contract$} deps.contract
+   * @param {TeqFw_Cfg_Key$} deps.key
+   * @param {TeqFw_Cfg_Source_DotenvParser$} deps.parser
    */
   constructor({ contract, key, parser }) {
     /**

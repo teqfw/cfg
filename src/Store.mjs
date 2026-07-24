@@ -4,7 +4,7 @@
 export default class Store {
   /**
    * @param {object} deps
-   * @param {object} deps.error
+   * @param {TeqFw_Cfg_Error$} deps.error
    * @param {object} deps.raw
    */
   constructor({ error, raw }) {
