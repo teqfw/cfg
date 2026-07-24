@@ -1,6 +1,9 @@
 // @ts-check
 /** @namespace TeqFw_Cfg_Source_DotenvParser @description Deterministic internal dotenv grammar parser. */
 
+/**
+ * @returns {any}
+ */
 export default function DotenvParser() {
     /** @param {string} text @returns {Record<string, string>} */
     this.parse = function (text) {
@@ -31,9 +34,28 @@ export default function DotenvParser() {
         return Object.fromEntries(result);
     };
 }
+/**
+ * @param {any} char
+ * @returns {any}
+ */
 function isWhitespace(char) { return char === ' ' || char === '\t' || char === '\r' || char === '\n'; }
+/**
+ * @param {any} source
+ * @param {any} index
+ * @returns {any}
+ */
 function skipNewline(source, index) { return source[index] === '\r' && source[index + 1] === '\n' ? index + 2 : index + 1; }
+/**
+ * @param {any} source
+ * @param {any} index
+ * @returns {any}
+ */
 function skipLine(source, index) { while (index < source.length && source[index] !== '\n' && source[index] !== '\r') index++; return index; }
+/**
+ * @param {any} source
+ * @param {any} index
+ * @returns {any}
+ */
 function readValue(source, index) {
     const quote = source[index];
     if (quote !== "'" && quote !== '"') {
