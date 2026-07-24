@@ -20,20 +20,6 @@ This package is a plugin of the Tequila Framework (TeqFW) platform. It declares 
 
 The agent-facing contract shipped in [`ai/`](./ai/) documents supported components, source and value rules, lifecycle semantics, errors, and canonical integration patterns. Start with [`ai/usage.md`](./ai/usage.md) or the machine-readable [`ai/package-api.ts`](./ai/package-api.ts).
 
-## Development Approach
-
-The code and accompanying agent documentation are developed by agents using ADSM — Agent Driven Software Management. This package, the TeqFW platform, and the ADSM methodology are the work of Alex Gusev. The approach treats agents as first-class participants in a disciplined engineering process: contracts are explicit, contexts are maintained close to the code, and runtime behavior is verified rather than assumed.
-
-It is a practical direction for teams building durable software with modern AI-assisted development methods, while preserving the engineering standards expected of production systems.
-
-## Author And Ecosystem
-
-Alex Gusev develops TeqFW and related software-engineering practices.
-
-- [Tequila Framework](https://teqfw.com/)
-- [Wired Geese](https://wiredgeese.com/)
-- [Alex Gusev Lab on Telegram](https://t.me/alexgusev_lab_en)
-
 ## Repository Layout
 
 - `src/` — package implementation modules.
@@ -48,3 +34,12 @@ The package targets Node.js 20 or newer and uses ECMAScript modules. Run the com
 ```sh
 npm test
 ```
+
+## Development and Ecosystem
+
+This product is developed by AI agents under the direction of Alex Gusev, following the Agent-Driven Software Management (ADSM) methodology. It is built for the Tequila Framework (TeqFW) platform and contributes to its ecosystem.
+
+- [Tequila Framework](https://teqfw.com/)
+- [Alex Gusev's Personal Website](https://wiredgeese.com/)
+- [Alex Gusev's Telegram Channel](https://t.me/alexgusev_lab_en)
+- [Agent-Driven Software Management: A Practical Guide](http://fly.wiredgeese.com/flancer/leanpub/adsm-en/)
