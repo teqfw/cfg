@@ -1,5 +1,8 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Reader @description Synchronous detached namespace projection over Store. */
+/**
+ * @namespace TeqFw_Cfg_Reader
+ * @description Synchronous detached namespace projection over Store.
+ */
 
 export default class Reader {
   /**
@@ -11,12 +14,14 @@ export default class Reader {
    */
   constructor({ error, key, raw, store }) {
     /**
-     * @param {any} namespace
-     * @returns {any}
+     * @param {unknown} namespace
+     * @returns {TeqFw_Cfg_NamespaceFragment}
      */
     this.get = (namespace) => {
-      key.assertNamespace(namespace);
+      namespace = key.assertNamespace(namespace);
+      /** @type {TeqFw_Cfg_RawSnapshot} */
       const snapshot = store.getSnapshot();
+      /** @type {Record<string, TeqFw_Cfg_RawValue>} */
       const fragment = {};
       for (const name of Object.keys(snapshot)) {
         const parsed = key.parse(name);

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import ErrorService from '../../src/Error.mjs';
+import ErrorCodes from '../../src/Enum/Error.mjs';
 import Key from '../../src/Key.mjs';
 import Raw from '../../src/Raw.mjs';
 import Contract from '../../src/Source/Contract.mjs';
@@ -10,9 +11,10 @@ import Reader from '../../src/Reader.mjs';
 import ObjectFactory from '../../src/Source/Object.mjs';
 import ProcessEnvFactory from '../../src/Source/ProcessEnv.mjs';
 import DotenvFileFactory from '../../src/Source/DotenvFile.mjs';
+import {readFile} from 'node:fs/promises';
 
 export async function resolveCfg() {
-    const error = new ErrorService();
+    const error = new ErrorService({codes: ErrorCodes});
     const key = new Key({error});
     const raw = new Raw({error});
     const contract = new Contract({error});
@@ -22,7 +24,7 @@ export async function resolveCfg() {
     const reader = new Reader({error, key, raw, store});
     const object = new ObjectFactory({contract});
     const processEnv = new ProcessEnvFactory({contract, key});
-    const dotenv = new DotenvFileFactory({contract, key, parser});
+    const dotenv = new DotenvFileFactory({contract, key, parser, readFile});
     return {error, key, raw, contract, parser, loader, reader, store, object, processEnv, dotenv};
 }
 

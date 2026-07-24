@@ -1,5 +1,8 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Key @description Internal key and namespace grammar service. */
+/**
+ * @namespace TeqFw_Cfg_Key
+ * @description Internal key and namespace grammar service.
+ */
 
 const SEGMENT = "[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*";
 const NAMESPACE = new RegExp("^" + SEGMENT + "$");
@@ -11,19 +14,20 @@ export default class Key {
    */
   constructor({ error }) {
     /**
-     * @param {any} value
-     * @returns {any}
+     * @param {unknown} value
+     * @returns {boolean}
      */
     this.isComplete = (value) =>
-      typeof value === "string" && COMPLETE.test(value); /**
-     * @param {any} value
-     * @param {any} context
-     * @returns {any}
+      typeof value === "string" && COMPLETE.test(value);
+    /**
+     * @param {unknown} value
+     * @param {Readonly<Record<string, string>>} context
+     * @returns {TeqFw_Cfg_Key__Parsed}
      */
     this.parse = (value, context = {}) => {
       if (typeof value !== "string" || !COMPLETE.test(value))
         throw error.create(
-          "CFG_INVALID_KEY",
+          error.codes.INVALID_KEY,
           typeof value === "string" ? { key: value, ...context } : context,
         );
       const boundary = value.indexOf("__");
@@ -31,14 +35,15 @@ export default class Key {
         namespace: value.slice(0, boundary),
         parameter: value.slice(boundary + 2),
       };
-    }; /**
-     * @param {any} value
-     * @returns {any}
+    };
+    /**
+     * @param {unknown} value
+     * @returns {string}
      */
     this.assertNamespace = (value) => {
       if (typeof value !== "string" || !NAMESPACE.test(value))
         throw error.create(
-          "CFG_INVALID_NAMESPACE",
+          error.codes.INVALID_NAMESPACE,
           typeof value === "string" ? { namespace: value } : {},
         );
       return value;

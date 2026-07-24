@@ -1,5 +1,8 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Loader @description One-shot sequential Source orchestrator. */
+/**
+ * @namespace TeqFw_Cfg_Loader
+ * @description One-shot sequential Source orchestrator.
+ */
 
 export default class Loader {
   /**
@@ -11,23 +14,26 @@ export default class Loader {
    * @param {TeqFw_Cfg_Store$} deps.store
    */
   constructor({ error, key, raw, contract, store }) {
-    let operation; /**
-     * @param {any} sources
-     * @returns {any}
+    /** @type {Promise<void> | undefined} */
+    let operation;
+    /**
+     * @param {unknown} sources
+     * @returns {Promise<void>}
      */
     this.load = (sources) => {
       const state = store.getState();
-      if (state === "loading") return operation;
+      if (state === "loading") return /** @type {Promise<void>} */ (operation);
       if (state === "ready")
-        return Promise.reject(error.create("CFG_LOAD_ALREADY_READY"));
+        return Promise.reject(error.create(error.codes.LOAD_ALREADY_READY));
       if (state === "failed") return Promise.reject(store.getFailure());
+      /** @type {ReadonlyArray<TeqFw_Cfg_Source__Captured>} */
       let descriptors;
       try {
         descriptors = contract.capture(sources);
       } catch (reason) {
         const failure = error.is(reason)
           ? reason
-          : error.create("CFG_INVALID_SOURCE");
+          : error.create(error.codes.INVALID_SOURCE);
         store.beginLoading();
         store.fail(failure);
         operation = Promise.reject(failure);
@@ -38,20 +44,23 @@ export default class Loader {
       operation = this.run(descriptors, store);
       operation.catch(() => {});
       return operation;
-    }; /**
-     * @param {any} descriptors
-     * @param {any} target
-     * @returns {Promise<any>}
+    };
+    /**
+     * @param {ReadonlyArray<TeqFw_Cfg_Source__Captured>} descriptors
+     * @param {TeqFw_Cfg_Store$} target
+     * @returns {Promise<void>}
      */
     this.run = async (descriptors, target) => {
       try {
+        /** @type {Record<string, TeqFw_Cfg_RawValue>} */
         const merged = {};
         for (const descriptor of descriptors) {
+          /** @type {unknown} */
           let result;
           try {
             result = await descriptor.load();
           } catch {
-            throw error.create("CFG_SOURCE_FAILED", {
+            throw error.create(error.codes.SOURCE_FAILED, {
               sourceId: descriptor.id,
             });
           }
@@ -59,12 +68,12 @@ export default class Loader {
             !Array.isArray(result) ||
             Object.getPrototypeOf(result) !== Array.prototype
           )
-            throw error.create("CFG_INVALID_ENTRY", {
+            throw error.create(error.codes.INVALID_ENTRY, {
               sourceId: descriptor.id,
             });
           for (let index = 0; index < result.length; index++) {
             if (!Object.prototype.hasOwnProperty.call(result, index))
-              throw error.create("CFG_INVALID_ENTRY", {
+              throw error.create(error.codes.INVALID_ENTRY, {
                 sourceId: descriptor.id,
               });
             const entry = result[index];
@@ -80,7 +89,7 @@ export default class Loader {
                 Object.prototype.hasOwnProperty.call(entry, name),
               )
             )
-              throw error.create("CFG_INVALID_ENTRY", {
+              throw error.create(error.codes.INVALID_ENTRY, {
                 sourceId: descriptor.id,
               });
             const keyDescriptor = Object.getOwnPropertyDescriptor(entry, "key"),
@@ -94,7 +103,7 @@ export default class Loader {
               !("value" in valueDescriptor) ||
               typeof keyDescriptor.value !== "string"
             )
-              throw error.create("CFG_INVALID_ENTRY", {
+              throw error.create(error.codes.INVALID_ENTRY, {
                 sourceId: descriptor.id,
               });
             key.parse(keyDescriptor.value, { sourceId: descriptor.id });
@@ -111,7 +120,7 @@ export default class Loader {
       } catch (reason) {
         const failure = error.is(reason)
           ? reason
-          : error.create("CFG_ILLEGAL_STATE");
+          : error.create(error.codes.ILLEGAL_STATE);
         target.fail(failure);
         throw failure;
       }

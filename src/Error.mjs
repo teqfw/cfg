@@ -1,19 +1,9 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Error @description Internal construction of safe, stable cfg errors. */
+/**
+ * @namespace TeqFw_Cfg_Error
+ * @description Internal construction of safe, stable cfg errors.
+ */
 
-const CODES = Object.freeze({
-  INVALID_SOURCE: "CFG_INVALID_SOURCE",
-  INVALID_ENTRY: "CFG_INVALID_ENTRY",
-  INVALID_SOURCE_ID: "CFG_INVALID_SOURCE_ID",
-  INVALID_KEY: "CFG_INVALID_KEY",
-  INVALID_RAW_VALUE: "CFG_INVALID_RAW_VALUE",
-  SOURCE_FAILED: "CFG_SOURCE_FAILED",
-  STORE_EMPTY: "CFG_STORE_EMPTY",
-  STORE_LOADING: "CFG_STORE_LOADING",
-  INVALID_NAMESPACE: "CFG_INVALID_NAMESPACE",
-  LOAD_ALREADY_READY: "CFG_LOAD_ALREADY_READY",
-  ILLEGAL_STATE: "CFG_ILLEGAL_STATE",
-});
 const MESSAGES = Object.freeze({
   CFG_INVALID_SOURCE: "Configuration source is invalid.",
   CFG_INVALID_ENTRY: "Configuration source entry is invalid.",
@@ -28,13 +18,18 @@ const MESSAGES = Object.freeze({
   CFG_ILLEGAL_STATE: "Configuration lifecycle transition is invalid.",
 });
 /**
- * @returns {any}
+ * @this {TeqFw_Cfg_Error$}
+ * @param {object} deps
+ * @param {TeqFw_Cfg_Enum_Error} deps.codes
  */
-export default function ErrorService() {
+export default function ErrorService(
+  /** @type {{codes: TeqFw_Cfg_Enum_Error}} */ { codes },
+) {
+  this.codes = codes;
   /**
-   * @param {any} code
-   * @param {any} context
-   * @returns {any}
+   * @param {TeqFw_Cfg_ErrorCode} code
+   * @param {Readonly<Record<string, string>>} context
+   * @returns {TeqFw_Cfg_Error__DTO}
    */
   this.create = function (code, context = {}) {
     const error = new globalThis.Error(
@@ -46,17 +41,21 @@ export default function ErrorService() {
       value: Object.freeze({ ...context }),
       enumerable: true,
     });
-    return Object.freeze(error);
-  }; /**
-   * @param {any} error
-   * @returns {any}
+    return /** @type {TeqFw_Cfg_Error__DTO} */ (Object.freeze(error));
+  };
+  /**
+   * @param {unknown} error
+   * @returns {error is TeqFw_Cfg_Error__DTO}
    */
   this.is = function (error) {
+    const candidate = /** @type {TeqFw_Cfg_Error__DTO} */ (error);
     return (
       error instanceof globalThis.Error &&
       error.name === "CfgError" &&
-      typeof error.code === "string"
+      typeof candidate.code === "string"
     );
   };
 }
-export const ERROR_CODES = CODES;
+export const __deps__ = Object.freeze({
+  default: Object.freeze({ codes: "TeqFw_Cfg_Enum_Error" }),
+});

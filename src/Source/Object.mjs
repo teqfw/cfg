@@ -1,5 +1,8 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Source_Object @description Explicit programmatic Source factory. */
+/**
+ * @namespace TeqFw_Cfg_Source_Object
+ * @description Explicit programmatic Source factory.
+ */
 
 export default class ObjectSource {
   /**
@@ -8,19 +11,20 @@ export default class ObjectSource {
    */
   constructor({ contract }) {
     /**
-     * @param {any} entries
-     * @param {any} id
-     * @returns {any}
+     * @param {unknown} entries
+     * @param {unknown} id
+     * @returns {TeqFw_Cfg_Source__Captured}
      */
     this.create = (entries, id = "object") => {
       contract.assertRecord(entries, "entries");
-      contract.assertId(id);
+      const sourceId = /** @type {string} */ (contract.assertId(id));
+      const record = /** @type {Record<string, unknown>} */ (entries);
       return Object.freeze({
-        id,
+        id: sourceId,
         async load() {
           const result = [];
-          for (const key of Object.keys(entries))
-            result.push(Object.freeze({ key, value: entries[key] }));
+          for (const key of Object.keys(record))
+            result.push(Object.freeze({ key, value: record[key] }));
           return Object.freeze(result);
         },
       });

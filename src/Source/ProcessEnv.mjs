@@ -1,5 +1,8 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Source_ProcessEnv @description Explicit process-environment Source factory. */
+/**
+ * @namespace TeqFw_Cfg_Source_ProcessEnv
+ * @description Explicit process-environment Source factory.
+ */
 
 export default class ProcessEnvSource {
   /**
@@ -9,20 +12,21 @@ export default class ProcessEnvSource {
    */
   constructor({ contract, key }) {
     /**
-     * @param {any} environment
-     * @param {any} id
-     * @returns {any}
+     * @param {unknown} environment
+     * @param {unknown} id
+     * @returns {TeqFw_Cfg_Source__Captured}
      */
     this.create = (environment, id = "process-env") => {
       contract.assertRecord(environment, "environment");
-      contract.assertId(id);
+      const sourceId = /** @type {string} */ (contract.assertId(id));
+      const record = /** @type {Record<string, unknown>} */ (environment);
       return Object.freeze({
-        id,
+        id: sourceId,
         async load() {
           const result = [];
-          for (const name of Object.keys(environment)) {
+          for (const name of Object.keys(record)) {
             if (!key.isComplete(name)) continue;
-            const value = environment[name];
+            const value = record[name];
             if (value === undefined) continue;
             if (typeof value !== "string")
               throw new Error("invalid environment value");

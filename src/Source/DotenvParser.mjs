@@ -1,11 +1,14 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Source_DotenvParser @description Deterministic internal dotenv grammar parser. */
+/**
+ * @namespace TeqFw_Cfg_Source_DotenvParser
+ * @description Deterministic internal dotenv grammar parser.
+ */
 
 /**
- * @returns {any}
+ * @this {TeqFw_Cfg_Source_DotenvParser$}
  */
 export default function DotenvParser() {
-  /** @param {string} text @returns {Record<string, string>} */
+  /** @param {unknown} text @returns {Record<string, string>} */
   this.parse = function (text) {
     if (typeof text !== "string") throw new TypeError("text");
     const source = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
@@ -49,16 +52,16 @@ export default function DotenvParser() {
   };
 }
 /**
- * @param {any} char
- * @returns {any}
+ * @param {unknown} char
+ * @returns {boolean}
  */
 function isWhitespace(char) {
   return char === " " || char === "\t" || char === "\r" || char === "\n";
 }
 /**
- * @param {any} source
- * @param {any} index
- * @returns {any}
+ * @param {string} source
+ * @param {number} index
+ * @returns {number}
  */
 function skipNewline(source, index) {
   return source[index] === "\r" && source[index + 1] === "\n"
@@ -66,9 +69,9 @@ function skipNewline(source, index) {
     : index + 1;
 }
 /**
- * @param {any} source
- * @param {any} index
- * @returns {any}
+ * @param {string} source
+ * @param {number} index
+ * @returns {number}
  */
 function skipLine(source, index) {
   while (
@@ -80,9 +83,9 @@ function skipLine(source, index) {
   return index;
 }
 /**
- * @param {any} source
- * @param {any} index
- * @returns {any}
+ * @param {string} source
+ * @param {number} index
+ * @returns {TeqFw_Cfg_Source_DotenvParser__Result}
  */
 function readValue(source, index) {
   const quote = source[index];
@@ -120,6 +123,7 @@ function readValue(source, index) {
       if (char === "\r" && source[index] === "\n") index++;
     } else if (quote === '"' && char === "\\") {
       const escaped = source[index++];
+      /** @type {Record<string, string>} */
       const escapes = { "\\": "\\", '"': '"', n: "\n", r: "\r", t: "\t" };
       if (!(escaped in escapes)) throw new Error("unsupported escape");
       value += escapes[escaped];

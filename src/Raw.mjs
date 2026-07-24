@@ -1,5 +1,8 @@
 // @ts-check
-/** @namespace TeqFw_Cfg_Raw @description Internal RawValue validation, copying, and freezing service. */
+/**
+ * @namespace TeqFw_Cfg_Raw
+ * @description Internal RawValue validation, copying, and freezing service.
+ */
 
 export default class Raw {
   /**
@@ -8,31 +11,32 @@ export default class Raw {
    */
   constructor({ error }) {
     /**
-     * @param {any} value
-     * @returns {any}
+     * @param {unknown} value
+     * @returns {TeqFw_Cfg_RawValue}
      */
     this.copy = (value) => {
       try {
         return copy(value, new WeakSet(), error);
       } catch (reason) {
         if (error.is(reason)) throw reason;
-        throw error.create("CFG_INVALID_RAW_VALUE");
+        throw error.create(error.codes.INVALID_RAW_VALUE);
       }
-    }; /**
-     * @param {any} entries
-     * @returns {any}
+    };
+    /**
+     * @param {unknown} entries
+     * @returns {TeqFw_Cfg_RawSnapshot}
      */
     this.copySnapshot = (entries) => {
       if (
         !isPlainRecord(entries) ||
         Object.getOwnPropertySymbols(entries).length
       )
-        throw error.create("CFG_INVALID_ENTRY");
+        throw error.create(error.codes.INVALID_ENTRY);
       const result = {};
       for (const key of Object.getOwnPropertyNames(entries)) {
         const descriptor = Object.getOwnPropertyDescriptor(entries, key);
         if (!descriptor || !descriptor.enumerable || !("value" in descriptor))
-          throw error.create("CFG_INVALID_ENTRY");
+          throw error.create(error.codes.INVALID_ENTRY);
         Object.defineProperty(result, key, {
           value: this.copy(descriptor.value),
           enumerable: true,
@@ -41,16 +45,17 @@ export default class Raw {
         });
       }
       return result;
-    }; /**
-     * @param {any} value
-     * @returns {any}
+    };
+    /**
+     * @param {TeqFw_Cfg_RawValue} value
+     * @returns {TeqFw_Cfg_RawValue}
      */
     this.deepFreeze = (value) => freeze(value, new WeakSet());
   }
 }
 /**
- * @param {any} value
- * @returns {any}
+ * @param {unknown} value
+ * @returns {value is Record<string, unknown>}
  */
 function isPlainRecord(value) {
   const proto =
@@ -63,17 +68,17 @@ function isPlainRecord(value) {
   );
 }
 /**
- * @param {any} error
- * @returns {any}
+ * @param {TeqFw_Cfg_Error$} error
+ * @returns {never}
  */
 function invalid(error) {
-  throw error.create("CFG_INVALID_RAW_VALUE");
+  throw error.create(error.codes.INVALID_RAW_VALUE);
 }
 /**
- * @param {any} value
- * @param {any} active
- * @param {any} error
- * @returns {any}
+ * @param {unknown} value
+ * @param {WeakSet<object>} active
+ * @param {TeqFw_Cfg_Error$} error
+ * @returns {TeqFw_Cfg_RawValue}
  */
 function copy(value, active, error) {
   if (
@@ -93,7 +98,7 @@ function copy(value, active, error) {
       )
         invalid(error);
       const descriptors = Object.getOwnPropertyDescriptors(value);
-      const length = descriptors.length?.value;
+      const length = value.length;
       if (
         !Number.isSafeInteger(length) ||
         length < 0 ||
@@ -104,6 +109,7 @@ function copy(value, active, error) {
         )
       )
         invalid(error);
+      /** @type {TeqFw_Cfg_RawValue[]} */
       const result = [];
       for (let index = 0; index < length; index++) {
         const descriptor = descriptors[index];
@@ -115,6 +121,7 @@ function copy(value, active, error) {
     }
     if (!isPlainRecord(value) || Object.getOwnPropertySymbols(value).length)
       invalid(error);
+    /** @type {Record<string, TeqFw_Cfg_RawValue>} */
     const result = {};
     for (const name of Object.getOwnPropertyNames(value)) {
       const descriptor = Object.getOwnPropertyDescriptor(value, name);
@@ -133,12 +140,12 @@ function copy(value, active, error) {
   }
 }
 /**
- * @param {any} value
- * @param {any} seen
- * @returns {any}
+ * @param {TeqFw_Cfg_RawValue} value
+ * @param {WeakSet<object>} seen
+ * @returns {TeqFw_Cfg_RawValue}
  */
 function freeze(value, seen) {
-  if (!value || typeof value !== "object" || seen.has(value)) return value;
+  if (value === null || typeof value !== "object" || seen.has(value)) return value;
   seen.add(value);
   for (const child of Object.values(value)) freeze(child, seen);
   return Object.freeze(value);
