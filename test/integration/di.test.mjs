@@ -1,6 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import Container from '@teqfw/di';
+import NamespaceRegistry from '@teqfw/di/node/registry/namespace';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const sourceRoot = fileURLToPath(new URL('../../src', import.meta.url));
@@ -21,6 +24,17 @@ test('documented cfg CDC tokens resolve through a real TeqFW container', async (
         'TeqFw_Cfg_Source_ProcessEnv$',
         'TeqFw_Cfg_Source_DotenvFile$',
     ]) assert.ok(await container.get(token), token);
+});
+
+test('package namespace metadata is discovered by the DI registry', async () => {
+    const appRoot = fileURLToPath(new URL('../../', import.meta.url));
+    const registry = new NamespaceRegistry({fs, path, appRoot});
+    const entry = (await registry.build()).find(({prefix}) => prefix === 'TeqFw_Cfg_');
+    assert.deepEqual(entry, {
+        prefix: 'TeqFw_Cfg_',
+        dirAbs: sourceRoot,
+        ext: '.mjs',
+    });
 });
 
 test('Loader receives dependencies and shares Store with Reader', async () => {

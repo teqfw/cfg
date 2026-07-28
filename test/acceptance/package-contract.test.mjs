@@ -9,7 +9,13 @@ test('package is DI-only, targets Node.js 20, and has no dotenv dependency', asy
     assert.equal(pkg.exports, undefined);
     assert.equal(pkg.dependencies?.dotenv, undefined);
     assert.equal(pkg.devDependencies?.dotenv, undefined);
-    assert.match(pkg.devDependencies?.['@teqfw/di'], /^\^?2\.7\.0$/);
+    assert.equal(pkg.devDependencies?.['@teqfw/di'], 'github:teqfw/di#main');
+    assert.deepEqual(pkg.teqfw?.fw?.di?.namespace, {
+        prefix: 'TeqFw_Cfg_',
+        path: './src',
+        ext: '.mjs',
+    });
+    assert.equal(pkg.teqfw?.namespaces, undefined);
 });
 
 test('suite scripts explicitly target and compose all intended suites', async () => {

@@ -32,13 +32,15 @@
   "types": "types.d.ts",
   "type": "module",
   "teqfw": {
-    "namespaces": [
-      {
-        "prefix": "TeqFw_Cfg_",
-        "path": "./src",
-        "ext": ".mjs"
+    "fw": {
+      "di": {
+        "namespace": {
+          "prefix": "TeqFw_Cfg_",
+          "path": "./src",
+          "ext": ".mjs"
+        }
       }
-    ]
+    }
   },
   "repository": {
     "type": "git",
@@ -59,7 +61,7 @@
     "url": "https://github.com/sponsors/teqfw"
   },
   "devDependencies": {
-    "@teqfw/di": "^2.7.0",
+    "@teqfw/di": "github:teqfw/di#main",
     "@types/node": "^26.1.1",
     "prettier": "^3.9.6",
     "typescript": "^7.0.2"
