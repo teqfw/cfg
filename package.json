@@ -34,11 +34,13 @@
   "teqfw": {
     "fw": {
       "di": {
-        "namespace": {
-          "prefix": "TeqFw_Cfg_",
-          "path": "./src",
-          "ext": ".mjs"
-        }
+        "namespaces": [
+          {
+            "prefix": "TeqFw_Cfg_",
+            "path": "./src",
+            "ext": ".mjs"
+          }
+        ]
       }
     }
   },

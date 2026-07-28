@@ -10,11 +10,12 @@ test('package is DI-only, targets Node.js 20, and has no dotenv dependency', asy
     assert.equal(pkg.dependencies?.dotenv, undefined);
     assert.equal(pkg.devDependencies?.dotenv, undefined);
     assert.equal(pkg.devDependencies?.['@teqfw/di'], 'github:teqfw/di#main');
-    assert.deepEqual(pkg.teqfw?.fw?.di?.namespace, {
+    assert.deepEqual(pkg.teqfw?.fw?.di?.namespaces, [{
         prefix: 'TeqFw_Cfg_',
         path: './src',
         ext: '.mjs',
-    });
+    }]);
+    assert.equal(pkg.teqfw?.fw?.di?.namespace, undefined);
     assert.equal(pkg.teqfw?.namespaces, undefined);
 });
 
