@@ -45,7 +45,7 @@ Project instructions and architecture remain authoritative; the skill supplies p
 
 This product is developed by AI agents under the direction of Alex Gusev, following the Agent-Driven Software Management (ADSM) methodology. It is built for the Tequila Framework (TeqFW) platform and contributes to its ecosystem.
 
-- [Tequila Framework](https://teqfw.com/?teqfw-log)
-- [Alex Gusev's Personal Website](https://wiredgeese.com/?teqfw-log)
+- [Tequila Framework](https://teqfw.com/?teqfw-cfg)
+- [Alex Gusev's Personal Website](https://wiredgeese.com/?teqfw-cfg)
 - [Alex Gusev's Telegram Channel](https://t.me/alexgusev_lab_en)
-- [Agent-Driven Software Management: A Practical Guide](http://fly.wiredgeese.com/flancer/leanpub/adsm-en/?teqfw-log)
+- [Agent-Driven Software Management: A Practical Guide](http://fly.wiredgeese.com/flancer/leanpub/adsm-en/?teqfw-cfg)
