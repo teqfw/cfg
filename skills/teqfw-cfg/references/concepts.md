@@ -1,7 +1,5 @@
 # Concepts
 
-Version: 20260724
-
 ## Role
 
 `@teqfw/cfg` is a TeqFW platform plugin that converts ordered configuration Sources into a stable, in-memory configuration snapshot. It deliberately separates acquisition of raw values from application-specific schema validation and typed configuration construction.

@@ -1,7 +1,5 @@
 # Sources
 
-Version: 20260724
-
 ## Source Protocol
 
 A Source is an object with this structural contract:
@@ -18,7 +16,7 @@ type Source = Readonly<{
 
 `id` must be unique within one `Loader.load()` call and match `[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}`. `load` must be a function. Loader captures both values before source execution, so later mutations of descriptors or their containing array do not affect the operation.
 
-Each resolved entry must own exactly enumerable `key` and `value` data properties. See `values.md` for their grammar and value contract.
+Each resolved entry must own exactly enumerable `key` and `value` data properties. See [Values](values.md) for their grammar and value contract.
 
 ## Object Source
 

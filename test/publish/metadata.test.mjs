@@ -1,2 +1,2 @@
 // @ts-nocheck
-import {test} from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';test('publish surface is DI-only',async()=>{const pkg=JSON.parse(await readFile('package.json'));assert.equal(pkg.exports,undefined);assert.equal(pkg.dependencies?.dotenv,undefined);assert.ok(pkg.files.includes('src/'));});
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';test('publish surface is DI-only',async()=>{const pkg=JSON.parse(await readFile('package.json'));assert.equal(pkg.exports,undefined);assert.equal(pkg.dependencies?.dotenv,undefined);assert.ok(pkg.files.includes('src/'));assert.ok(pkg.files.includes('skills/'));assert.equal(pkg.files.includes('ai/'),false);});

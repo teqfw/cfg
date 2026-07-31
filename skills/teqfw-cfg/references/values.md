@@ -1,7 +1,5 @@
 # Values
 
-Version: 20260724
-
 ## Key Grammar
 
 A complete configuration key is:

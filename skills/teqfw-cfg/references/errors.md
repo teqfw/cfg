@@ -1,7 +1,5 @@
 # Errors
 
-Version: 20260724
-
 ## Error Contract
 
 Package failures are frozen `Error` objects with:

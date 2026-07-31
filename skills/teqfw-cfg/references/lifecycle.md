@@ -1,7 +1,5 @@
 # Lifecycle
 
-Version: 20260724
-
 ## Role
 
 `Loader` performs one sequential load operation into its associated `Store`. `Store` owns the resulting snapshot and enforces its lifecycle.

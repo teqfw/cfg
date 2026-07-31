@@ -1,0 +1,4 @@
+interface:
+  display_name: "TeqFW Config"
+  short_description: "Integrate @teqfw/cfg safely"
+  default_prompt: "Use $teqfw-cfg to integrate @teqfw/cfg in this project."
