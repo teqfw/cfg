@@ -63,7 +63,7 @@
     "url": "https://github.com/sponsors/teqfw"
   },
   "devDependencies": {
-    "@teqfw/di": "github:teqfw/di#main",
+    "@teqfw/di": "^2.8.0",
     "@types/node": "^26.1.1",
     "prettier": "^3.9.6",
     "typescript": "^7.0.2"
