@@ -39,9 +39,6 @@ test('representative public failures use documented codes and common messages', 
         ['invalid complete key', async (runtime) => runtime.loader.load([customSource('bad', [{key: 'bad', value: 1}])]).catch((error) => error), 'CFG_INVALID_KEY'],
         ['invalid RawValue', async (runtime) => runtime.loader.load([customSource('bad', [{key: 'TEQFW_WEB__A', value: undefined}])]).catch((error) => error), 'CFG_INVALID_RAW_VALUE'],
         ['Source failure', async (runtime) => runtime.loader.load([customSource('bad', () => { throw new Error('secret'); })]).catch((error) => error), 'CFG_SOURCE_FAILED'],
-        ['Store not ready', async (runtime) => {
-            try { runtime.reader.get('TEQFW_WEB'); } catch (error) { return error; }
-        }, 'CFG_STORE_EMPTY'],
         ['invalid namespace', async (runtime) => {
             try { runtime.reader.get('invalid'); } catch (error) { return error; }
         }, 'CFG_INVALID_NAMESPACE'],

@@ -14,7 +14,7 @@ selected Sources → Loader → immutable raw snapshot → Reader → applicatio
 
 - ordered loading from objects, `process.env`, dotenv files, and custom sources;
 - deterministic precedence, with later complete keys replacing earlier values;
-- one atomic, deeply immutable raw snapshot after bootstrap;
+- one atomic, deeply immutable raw snapshot after bootstrap, or an empty snapshot when configuration is not loaded;
 - DI-resolvable components under the `TeqFw_Cfg_` namespace.
 
 ## Boundaries

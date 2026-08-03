@@ -4,6 +4,8 @@
  * @description Internal immutable snapshot state owner.
  */
 
+const EMPTY_SNAPSHOT = Object.freeze({});
+
 export default class Store {
   /**
    * @param {object} deps
@@ -13,8 +15,8 @@ export default class Store {
   constructor({ error, raw }) {
     /** @type {TeqFw_Cfg_Store_State} */
     let state = "empty";
-    /** @type {TeqFw_Cfg_RawSnapshot | undefined} */
-    let snapshot;
+    /** @type {TeqFw_Cfg_RawSnapshot} */
+    let snapshot = EMPTY_SNAPSHOT;
     /** @type {unknown} */
     let failure;
     Object.defineProperty(this, "state", { get: () => state });
@@ -54,10 +56,9 @@ export default class Store {
      * @returns {TeqFw_Cfg_RawSnapshot}
      */
     this.getSnapshot = () => {
-      if (state === "empty") throw error.create(error.codes.STORE_EMPTY);
       if (state === "loading") throw error.create(error.codes.STORE_LOADING);
       if (state === "failed") throw failure;
-      return /** @type {TeqFw_Cfg_RawSnapshot} */ (snapshot);
+      return snapshot;
     };
     /**
      * @returns {unknown}

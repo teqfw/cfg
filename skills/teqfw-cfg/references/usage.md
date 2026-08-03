@@ -38,7 +38,7 @@ const web = reader.get("TEQFW_WEB");
 const port = Number(web.PORT ?? "3000");
 ```
 
-`Reader.get()` returns a new detached object each time. It does not coerce raw values and returns `{}` for a valid namespace with no entries.
+`Reader.get()` returns a new detached object each time. It does not coerce raw values and returns `{}` for a valid namespace with no entries, including before configuration loading starts.
 
 ## Programmatic And Custom Sources
 
@@ -59,4 +59,4 @@ Use a custom Source only with a unique id and asynchronous `load()`. Read [Sourc
 - `Loader.load()` shares one Promise with concurrent callers while loading.
 - A ready Store rejects later loads with `CFG_LOAD_ALREADY_READY`.
 - A failed load is terminal; subsequent reads and loads expose the original failure.
-- `Reader.get()` before or during loading throws a stable cfg error.
+- `Reader.get()` before loading returns a detached empty fragment; during loading it throws `CFG_STORE_LOADING`.

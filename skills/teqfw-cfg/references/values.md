@@ -40,10 +40,10 @@ Before publication, each accepted value is copied. The Store deeply freezes the 
 
 ## Reader Semantics
 
-`TeqFw_Cfg_Reader$` reads one valid namespace from the ready Store:
+`TeqFw_Cfg_Reader$` reads one valid namespace from the Store. Before loading starts, it reads the immutable empty snapshot:
 
 ```js
 const fragment = reader.get("TEQFW_WEB");
 ```
 
-It returns a fresh, mutable, detached object with detached nested values. A valid but absent namespace yields a fresh empty object. The Reader does not parse strings, apply defaults, validate required entries, or cache projections; those are application responsibilities.
+It returns a fresh, mutable, detached object with detached nested values. A valid but absent namespace, including before configuration loading starts, yields a fresh empty object. The Reader does not parse strings, apply defaults, validate required entries, or cache projections; those are application responsibilities.

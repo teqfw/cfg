@@ -62,9 +62,16 @@ test('Reader fragments are fresh, detached, mutable, and not runtime-frozen', as
     assert.deepEqual(reader.get('TEQFW_WEB'), {NESTED: {array: [1]}});
 });
 
-test('Reader reports Store empty and loading lifecycle states', async () => {
-    const {loader, reader} = await resolveCfg();
-    assert.throws(() => reader.get('TEQFW_WEB'), (error) => error.code === 'CFG_STORE_EMPTY');
+test('Reader returns detached empty fragments before loading and reports loading state', async () => {
+    const {loader, reader, store} = await resolveCfg();
+    const emptySnapshot = store.getSnapshot();
+    assert.deepEqual(emptySnapshot, {});
+    assert.equal(Object.isFrozen(emptySnapshot), true);
+    assert.strictEqual(store.getSnapshot(), emptySnapshot);
+    const first = reader.get('TEQFW_WEB');
+    const second = reader.get('TEQFW_WEB');
+    assert.deepEqual(first, {});
+    assert.notStrictEqual(first, second);
     let release;
     const pending = new Promise((resolve) => {
         release = resolve;

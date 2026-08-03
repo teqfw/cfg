@@ -8,7 +8,7 @@
 
 The Store has four states:
 
-- `empty` — no load has started; no snapshot can be read.
+- `empty` — no load has started; reads use the immutable empty snapshot.
 - `loading` — one Loader operation is in progress; partial data is never visible.
 - `ready` — a complete, deeply frozen snapshot is available.
 - `failed` — the load operation failed; the original cfg error is retained.
@@ -36,6 +36,6 @@ An entry absent from later Sources remains in the snapshot. `undefined` is not a
 
 ## Publication And Failure
 
-No snapshot is visible until every Source and every entry has been validated. On success, the Loader publishes one copied, deeply frozen snapshot. On any error, it fails the Store and exposes a stable cfg error rather than a partially merged state.
+Before loading starts, the Store exposes one immutable empty snapshot. Once loading begins, no partial snapshot is visible. On success, the Loader replaces it with one copied, deeply frozen snapshot. On any error, it fails the Store and exposes a stable cfg error rather than a partially merged state.
 
 Source exceptions, file-reading failures, and dotenv syntax failures become `CFG_SOURCE_FAILED` with the Source identifier as safe context. Details from the underlying exception are not propagated.

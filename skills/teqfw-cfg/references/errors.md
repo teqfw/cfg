@@ -23,7 +23,7 @@ They have `name === "CfgError"`. Handle the stable `code` and, when useful, its 
 | `CFG_INVALID_KEY` | A complete configuration key is invalid. |
 | `CFG_INVALID_RAW_VALUE` | A raw value is outside the supported value contract. |
 | `CFG_SOURCE_FAILED` | A Source threw, rejected, or could not be read or parsed. |
-| `CFG_STORE_EMPTY` | A read was attempted before loading started. |
+| `CFG_STORE_EMPTY` | Legacy code retained for compatibility; Store reads no longer emit it. |
 | `CFG_STORE_LOADING` | A read was attempted while loading is in progress. |
 | `CFG_INVALID_NAMESPACE` | Reader received an invalid namespace. |
 | `CFG_LOAD_ALREADY_READY` | Loading was attempted after a successful load. |
