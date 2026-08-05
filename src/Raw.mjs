@@ -7,7 +7,7 @@
 export default class Raw {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Error$} deps.error
+   * @param {TeqFw_Cfg_Error} deps.error
    */
   constructor({ error }) {
     /**
@@ -68,7 +68,7 @@ function isPlainRecord(value) {
   );
 }
 /**
- * @param {TeqFw_Cfg_Error$} error
+ * @param {TeqFw_Cfg_Error} error
  * @returns {never}
  */
 function invalid(error) {
@@ -77,7 +77,7 @@ function invalid(error) {
 /**
  * @param {unknown} value
  * @param {WeakSet<object>} active
- * @param {TeqFw_Cfg_Error$} error
+ * @param {TeqFw_Cfg_Error} error
  * @returns {TeqFw_Cfg_RawValue}
  */
 function copy(value, active, error) {

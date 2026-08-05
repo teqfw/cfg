@@ -18,7 +18,7 @@ const MESSAGES = Object.freeze({
   CFG_ILLEGAL_STATE: "Configuration lifecycle transition is invalid.",
 });
 /**
- * @this {TeqFw_Cfg_Error$}
+ * @this {TeqFw_Cfg_Error}
  * @param {object} deps
  * @param {TeqFw_Cfg_Enum_Error} deps.codes
  */

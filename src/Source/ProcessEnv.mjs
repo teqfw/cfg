@@ -7,8 +7,8 @@
 export default class ProcessEnvSource {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Source_Contract$} deps.contract
-   * @param {TeqFw_Cfg_Key$} deps.key
+   * @param {TeqFw_Cfg_Source_Contract} deps.contract
+   * @param {TeqFw_Cfg_Key} deps.key
    */
   constructor({ contract, key }) {
     /**

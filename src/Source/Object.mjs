@@ -7,7 +7,7 @@
 export default class ObjectSource {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Source_Contract$} deps.contract
+   * @param {TeqFw_Cfg_Source_Contract} deps.contract
    */
   constructor({ contract }) {
     /**

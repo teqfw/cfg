@@ -9,8 +9,8 @@ const EMPTY_SNAPSHOT = Object.freeze({});
 export default class Store {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Error$} deps.error
-   * @param {TeqFw_Cfg_Raw$} deps.raw
+   * @param {TeqFw_Cfg_Error} deps.error
+   * @param {TeqFw_Cfg_Raw} deps.raw
    */
   constructor({ error, raw }) {
     /** @type {TeqFw_Cfg_Store_State} */

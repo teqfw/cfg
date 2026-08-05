@@ -20,6 +20,7 @@ Use this skill for consumer code that composes or depends on the installed `@teq
 3. Select Sources explicitly, call `Loader.load()` once during bootstrap, and await it before resolving configuration-consuming runtime.
 4. Treat the Store snapshot as infrastructure-owned and immutable; use Reader only for fresh detached raw namespace fragments, then let each consumer parse, validate, and freeze its typed settings.
 5. Read the references selected below before editing, then validate with the host project tests.
+6. In JSDoc and TypeScript declarations, component instance types use their base namespace name; `__Class` denotes a component constructor. A trailing `$` is reserved for runtime CDC identifiers.
 
 ## Select References
 

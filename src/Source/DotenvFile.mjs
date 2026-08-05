@@ -7,10 +7,10 @@
 export default class DotenvFileSource {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Source_Contract$} deps.contract
-   * @param {TeqFw_Cfg_Key$} deps.key
-   * @param {TeqFw_Cfg_Source_DotenvParser$} deps.parser
-   * @param {typeof import("node:fs/promises").readFile} deps.readFile
+   * @param {TeqFw_Cfg_Source_Contract} deps.contract
+   * @param {TeqFw_Cfg_Key} deps.key
+   * @param {TeqFw_Cfg_Source_DotenvParser} deps.parser
+   * @param {TeqFw_Cfg_Node_Fs__ReadFile} deps.readFile
    */
   constructor({ contract, key, parser, readFile }) {
     /**

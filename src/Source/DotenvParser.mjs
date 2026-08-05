@@ -5,7 +5,7 @@
  */
 
 /**
- * @this {TeqFw_Cfg_Source_DotenvParser$}
+ * @this {TeqFw_Cfg_Source_DotenvParser}
  */
 export default function DotenvParser() {
   /** @param {unknown} text @returns {Record<string, string>} */

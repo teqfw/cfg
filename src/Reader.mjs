@@ -7,10 +7,10 @@
 export default class Reader {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Error$} deps.error
-   * @param {TeqFw_Cfg_Key$} deps.key
-   * @param {TeqFw_Cfg_Raw$} deps.raw
-   * @param {TeqFw_Cfg_Store$} deps.store
+   * @param {TeqFw_Cfg_Error} deps.error
+   * @param {TeqFw_Cfg_Key} deps.key
+   * @param {TeqFw_Cfg_Raw} deps.raw
+   * @param {TeqFw_Cfg_Store} deps.store
    */
   constructor({ error, key, raw, store }) {
     /**
