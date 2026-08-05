@@ -10,7 +10,7 @@ declare global {
     /** Source descriptor normalized by the internal contract service. */
     type TeqFw_Cfg_Source__Captured = Readonly<{id: string, load: () => unknown}>;
     type TeqFw_Cfg_Source_DotenvParser__Result = Readonly<{value: string, index: number}>;
-    type TeqFw_Cfg_SourceFactory = Readonly<{create: (...args: readonly unknown[]) => TeqFw_Cfg_Source}>;
+    type TeqFw_Cfg_SourceFactory = Readonly<{create: (...args: readonly unknown[]) => TeqFw_Cfg_Source__Captured}>;
     type TeqFw_Cfg_Store_State = 'empty' | 'loading' | 'ready' | 'failed';
     type TeqFw_Cfg_ErrorCode = 'CFG_INVALID_SOURCE'|'CFG_INVALID_ENTRY'|'CFG_INVALID_SOURCE_ID'|'CFG_INVALID_KEY'|'CFG_INVALID_RAW_VALUE'|'CFG_SOURCE_FAILED'|'CFG_STORE_EMPTY'|'CFG_STORE_LOADING'|'CFG_INVALID_NAMESPACE'|'CFG_LOAD_ALREADY_READY'|'CFG_ILLEGAL_STATE';
     type TeqFw_Cfg_Error__DTO = Readonly<Error & {code: TeqFw_Cfg_ErrorCode, context: Readonly<Record<string, string>>}>;

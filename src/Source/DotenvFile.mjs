@@ -15,7 +15,7 @@ export default class DotenvFileSource {
   constructor({ contract, key, parser, readFile }) {
     /**
      * @param {unknown} options
-     * @returns {TeqFw_Cfg_Source}
+     * @returns {TeqFw_Cfg_Source__Captured}
      */
     this.create = (options) => {
       contract.assertRecord(options, "options");

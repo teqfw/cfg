@@ -6,9 +6,10 @@
     "moduleResolution": "nodenext",
     "noEmit": true,
     "skipLibCheck": true,
+    "strict": true,
     "target": "ESNext",
     "types": ["node"]
   },
-  "include": ["src", "test", "types.d.ts"],
+  "include": ["src", "types.d.ts"],
   "exclude": ["dist", "node_modules"]
 }

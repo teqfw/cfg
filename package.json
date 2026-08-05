@@ -53,7 +53,9 @@
     "test:integration": "node test/run-suite.mjs integration",
     "test:acceptance": "node test/run-suite.mjs acceptance",
     "test:publish": "node test/run-suite.mjs publish",
-    "test": "npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish"
+    "test": "npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish",
+    "typecheck": "tsc -p jsconfig.json",
+    "lint:md": "markdownlint-cli2 \"skills/**/*.md\" \"*.md\""
   },
   "engines": {
     "node": ">=20"
@@ -65,7 +67,9 @@
   "devDependencies": {
     "@teqfw/di": "^2.8.0",
     "@types/node": "^26.1.1",
+    "markdownlint-cli2": "^0.23.2",
     "prettier": "^3.9.6",
-    "typescript": "^7.0.2"
+    "typescript": "^5.9.3",
+    "typescript-language-server": "^5.3.0"
   }
 }
