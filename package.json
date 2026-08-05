@@ -1,6 +1,6 @@
 {
   "name": "@teqfw/cfg",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Configuration package for Tequila Framework applications: load .env files and provide typed configuration through the DI container.",
   "keywords": [
     "configuration",
@@ -65,8 +65,8 @@
     "url": "https://github.com/sponsors/teqfw"
   },
   "devDependencies": {
-    "@teqfw/di": "github:teqfw/di#main",
-    "@teqfw/log": "github:teqfw/log#main",
+    "@teqfw/di": ">=2.9.0",
+    "@teqfw/log": ">=2.0.0",
     "@types/node": "^26.1.1",
     "markdownlint-cli2": "^0.23.2",
     "prettier": "^3.9.6",
