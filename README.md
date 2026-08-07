@@ -5,7 +5,7 @@
 
 > **Human-governed. Agent-built. Agent-ready.**
 
-`@teqfw/cfg` loads selected configuration sources into one immutable raw snapshot and exposes detached namespace fragments through the TeqFW dependency-injection container, so application packages own their typed settings. It is part of the Tequila Framework (TeqFW): created and evolved by coding agents under the architectural direction and final responsibility of Alex Gusev, and shipped with a version-matched Agent Skill so other agents can understand, integrate, and use it correctly.
+`@teqfw/cfg` loads selected configuration sources into one immutable raw snapshot and exposes detached namespace fragments through the TeqFW dependency-injection container, so application packages own their typed settings. It is part of the Tequila Framework (TeqFW): created and evolved by coding agents under the architectural direction and final responsibility of [Alex Gusev](https://github.com/flancer64), and shipped with a version-matched Agent Skill so other agents can understand, integrate, and use it correctly.
 
 ## Why use it
 
