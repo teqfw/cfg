@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0] - 2026-08-25
+
+### Added (2.1.0)
+
+- Added optional `TeqFw_Cfg_Log_Policy$` integration that loads the conventional host logging policy file after configuration is ready, including explicit override and stable configuration errors.
+- Added the `CfgError` static type contract and the logging-policy error codes to the public type and error surfaces.
+- Added focused unit tests mapped one-to-one to package modules and integration coverage for the installed npm `@teqfw/log` plugin.
+
+### Changed (2.1.0)
+
+- Updated `@teqfw/log` to the npm dependency range `>=2.1.0`; `@teqfw/di` is now supplied transitively through it instead of being declared as a development dependency.
+- Updated the distributed Agent Skill and README usage guidance to inject cfg components into the host composition root, including optional logging policy behavior.
+- Simplified Reader dependencies and Store internals without changing the immutable configuration snapshot contract.
+
 ## [2.0.0] - 2026-08-05
 
 ### Added
