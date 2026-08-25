@@ -8,11 +8,12 @@
 export default class Policy {
   /**
    * @param {object} deps
+   * @param {TeqFw_Cfg_Error} deps.error
    * @param {TeqFw_Cfg_Reader} deps.reader
    * @param {TeqFw_Cfg_Log_Policy_File} deps.policyFile
    * @param {TeqFw_Cfg_Log_Policy_Resolve} deps.resolve
    */
-  constructor({ reader, policyFile, resolve }) {
+  constructor({ error, reader, policyFile, resolve }) {
     /**
      * Applies the configured policy file. The conventional file is optional;
      * an explicit override is mandatory and any failure is propagated.
@@ -26,20 +27,20 @@ export default class Policy {
         typeof options.appRoot !== "string" ||
         options.appRoot.length === 0
       )
-        throw new Error("Logging policy application requires a non-empty appRoot.");
+        throw error.create(error.codes.INVALID_LOG_POLICY, { field: "appRoot" });
       const configuredPath = reader.get("TEQFW_LOG").POLICY_FILE;
       if (configuredPath !== undefined && (typeof configuredPath !== "string" || configuredPath.length === 0))
-        throw new Error("TEQFW_LOG__POLICY_FILE must be a non-empty string.");
+        throw error.create(error.codes.INVALID_LOG_POLICY, { field: "policyFile" });
       const configured = configuredPath !== undefined;
       const path = configured ? configuredPath : resolve(options.appRoot, "etc", "log.policy");
       try {
         await policyFile.apply(path);
         return { path, configured, applied: true };
-      } catch (error) {
-        if (!configured && /** @type {{code?: unknown}} */ (error)?.code === "ENOENT") {
+      } catch (reason) {
+        if (!configured && /** @type {{code?: unknown}} */ (reason)?.code === "ENOENT") {
           return { path, configured, applied: false };
         }
-        throw error;
+        throw error.create(error.codes.LOG_POLICY_FAILED, { field: "policyFile" });
       }
     };
     Object.freeze(this);
@@ -48,6 +49,7 @@ export default class Policy {
 
 export const __deps__ = Object.freeze({
   default: Object.freeze({
+    error: "TeqFw_Cfg_Error$",
     reader: "TeqFw_Cfg_Reader$",
     policyFile: "TeqFw_Log_Policy_File$",
     resolve: "node:path__resolve",

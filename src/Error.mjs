@@ -14,6 +14,8 @@ const MESSAGES = Object.freeze({
   CFG_STORE_EMPTY: "Configuration store is empty.",
   CFG_STORE_LOADING: "Configuration store is loading.",
   CFG_INVALID_NAMESPACE: "Configuration namespace is invalid.",
+  CFG_INVALID_LOG_POLICY: "Logging policy configuration is invalid.",
+  CFG_LOG_POLICY_FAILED: "Logging policy application failed.",
   CFG_LOAD_ALREADY_READY: "Configuration has already been loaded.",
   CFG_ILLEGAL_STATE: "Configuration lifecycle transition is invalid.",
 });
@@ -57,5 +59,5 @@ export default function ErrorService(
   };
 }
 export const __deps__ = Object.freeze({
-  default: Object.freeze({ codes: "TeqFw_Cfg_Enum_Error" }),
+  default: Object.freeze({ codes: "TeqFw_Cfg_Enum_Error__default" }),
 });

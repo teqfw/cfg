@@ -15,9 +15,9 @@ Use this skill for consumer code that composes or depends on the installed `@teq
 
 ## Apply
 
-1. Register the package through its `package.json#teqfw.fw.di.namespaces` metadata, or add the `TeqFw_Cfg_` namespace root in the Node.js composition root.
-2. Resolve cfg only through TeqFW DI CDC identifiers; the package has no root runtime import, export map, or supported `src/**` deep import.
-3. Select Sources explicitly, call `Loader.load()` once during bootstrap, and await it before resolving configuration-consuming runtime; then optionally apply `TeqFw_Cfg_Log_Policy$` for host logging.
+1. Register the package through its `package.json#teqfw.fw.di.namespaces` metadata, or add the `TeqFw_Cfg_` namespace root in the Node.js composition root. When using `TeqFw_Cfg_Log_Policy$` with manual roots, also register `TeqFw_Log_` before the first resolution.
+2. Resolve cfg only through TeqFW DI CDC identifiers; the package has no root runtime import, export map, or supported `src/**` deep import. Use `Container.get()` only in the composition root; runtime components receive cfg services through declared `__deps__`.
+3. Select Sources explicitly, call `Loader.load()` once during bootstrap, and await it before resolving configuration-consuming runtime; a host-owned lifecycle component may then inject and apply `TeqFw_Cfg_Log_Policy$`.
 4. Treat the Store snapshot as infrastructure-owned and immutable; use Reader only for fresh detached raw namespace fragments, then let each consumer parse, validate, and freeze its typed settings.
 5. Read the references selected below before editing, then validate with the host project tests.
 6. In JSDoc and TypeScript declarations, component instance types use their base namespace name; `__Class` denotes a component constructor. A trailing `$` is reserved for runtime CDC identifiers.
@@ -33,4 +33,4 @@ Use this skill for consumer code that composes or depends on the installed `@teq
 | Handle or test cfg failures | [Errors](references/errors.md), [Lifecycle](references/lifecycle.md), [Package API](references/package-api.ts) |
 | Discover the installed skill | [Distribution](references/distribution.md) |
 
-cfg creates one immutable raw application snapshot from ordered Sources. Its narrow log bridge applies log-owned rules from `etc/log.policy` or `TEQFW_LOG__POLICY_FILE`; it does not create typed application configuration, schemas, package discovery, configuration registration, or secret-management policy.
+cfg creates one immutable raw application snapshot from ordered Sources. Its narrow log bridge is opt-in: a host component applies log-owned rules from `etc/log.policy` or `TEQFW_LOG__POLICY_FILE`; without it, log retains `*=info`. cfg does not create typed application configuration, schemas, package discovery, configuration registration, or secret-management policy.

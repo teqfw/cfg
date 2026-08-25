@@ -1,54 +1,80 @@
 # Usage
 
-## Canonical Container Setup
+## Host Composition Boundary
 
-```js
-import { fileURLToPath } from "node:url";
-import Container from "@teqfw/di";
-
-const cfgRoot = fileURLToPath(new URL("./node_modules/@teqfw/cfg/src", import.meta.url));
-const container = new Container();
-container.addNamespaceRoot("TeqFw_Cfg_", cfgRoot, ".mjs");
-```
-
-When using `NamespaceRegistry`, declare `@teqfw/cfg` as a package dependency and let it discover `package.json#teqfw.fw.di.namespaces` rather than registering the root manually.
+Declare `@teqfw/cfg` as a package dependency. The host composition root registers its `package.json#teqfw.fw.di.namespaces` metadata before resolving its own bootstrap entry point; use the `@teqfw/di` or `@teqfw/cli` documentation for that host-specific setup. When a manually configured host uses `TeqFw_Cfg_Log_Policy$`, it also registers `TeqFw_Log_` before its first resolution.
 
 ## Load Configuration Once
 
 Configure Sources in precedence order: a later entry with the same complete key replaces the earlier entry as a whole.
 
 ```js
-const loader = await container.get("TeqFw_Cfg_Loader$");
-const processEnv = await container.get("TeqFw_Cfg_Source_ProcessEnv$");
-const dotenv = await container.get("TeqFw_Cfg_Source_DotenvFile$");
+export default class Configuration {
+  constructor({loader, processEnv, dotenv}) {
+    return {
+      load() {
+        return loader.load([
+          dotenv.create({path: ".env", id: "project-dotenv"}),
+          processEnv.create(process.env),
+        ]);
+      },
+    };
+  }
+}
 
-await loader.load([
-  dotenv.create({ path: ".env", id: "project-dotenv" }),
-  processEnv.create(process.env),
-]);
+export const __deps__ = Object.freeze({
+  default: Object.freeze({
+    loader: "TeqFw_Cfg_Loader$",
+    processEnv: "TeqFw_Cfg_Source_ProcessEnv$",
+    dotenv: "TeqFw_Cfg_Source_DotenvFile$",
+  }),
+});
 ```
 
-This gives `process.env` higher precedence than `.env`. Call `load()` exactly once during bootstrap and await it before consuming configuration.
+This gives `process.env` higher precedence than `.env`. The composition root resolves the host Configuration component as its bootstrap root, calls `load()` exactly once, and awaits it before consuming configuration. In an `@teqfw/cli` host, CLI itself owns this load and the host configurator returns only additional Source descriptors.
 
 ## Read A Namespace
 
 ```js
-const reader = await container.get("TeqFw_Cfg_Reader$");
-const web = reader.get("TEQFW_WEB");
-const port = Number(web.PORT ?? "3000");
+export default class WebConfig {
+  constructor({reader}) {
+    const web = reader.get("TEQFW_WEB");
+    return Object.freeze({port: Number(web.PORT ?? "3000")});
+  }
+}
+
+export const __deps__ = Object.freeze({
+  default: Object.freeze({reader: "TeqFw_Cfg_Reader$"}),
+});
 ```
 
-`Reader.get()` returns a new detached object each time. It does not coerce raw values and returns `{}` for a valid namespace with no entries, including before configuration loading starts.
+`Reader.get()` returns a new detached object each time. It does not coerce raw values and returns `{}` for a valid namespace with no entries, including before configuration loading starts. `Container.get()` is only for resolving the host bootstrap root; all components receive Reader and other services through declared dependencies.
 
 ## Programmatic And Custom Sources
 
 ```js
-const object = await container.get("TeqFw_Cfg_Source_Object$");
-await loader.load([object.create({ TEQFW_WEB__PORT: 3000 }, "defaults")]);
+export default class Configuration {
+  constructor({loader, object}) {
+    const remoteSource = Object.freeze({
+      id: "deployment-settings",
+      async load() { return Object.freeze([Object.freeze({key: "TEQFW_WEB__PORT", value: 8080})]); },
+    });
+    return {
+      load() {
+        return loader.load([
+          object.create({TEQFW_WEB__PORT: 3000}, "defaults"),
+          remoteSource,
+        ]);
+      },
+    };
+  }
+}
 
-const remoteSource = Object.freeze({
-  id: "deployment-settings",
-  async load() { return Object.freeze([Object.freeze({ key: "TEQFW_WEB__PORT", value: 8080 })]); },
+export const __deps__ = Object.freeze({
+  default: Object.freeze({
+    loader: "TeqFw_Cfg_Loader$",
+    object: "TeqFw_Cfg_Source_Object$",
+  }),
 });
 ```
 
@@ -63,4 +89,4 @@ Use a custom Source only with a unique id and asynchronous `load()`. Read [Sourc
 
 ## Apply Host Logging Policy
 
-After `Loader.load()` resolves, call `TeqFw_Cfg_Log_Policy$.apply({appRoot})`. It first uses `TEQFW_LOG__POLICY_FILE` when configured; otherwise it tries the optional `<appRoot>/etc/log.policy`. A missing conventional file leaves `@teqfw/log` at its built-in `*=info` policy. An explicitly configured missing, unreadable, or malformed file rejects and must be handled as a bootstrap failure.
+cfg does not apply a policy automatically. Inject `TeqFw_Cfg_Log_Policy$` into a host-owned component that runs after cfg loading and call `apply({appRoot})` there. In a CLI host, inject `TeqFw_Cli_Config$` too and pass `config.applicationRoot`; CLI supplies this fact but does not invoke the bridge itself. The bridge first uses `TEQFW_LOG__POLICY_FILE` when configured; otherwise it tries the optional `<appRoot>/etc/log.policy`. A missing conventional file leaves `@teqfw/log` at its built-in `*=info` threshold, enabling `info` and more severe records but not `debug` or `trace`. An invalid bridge input rejects with `CFG_INVALID_LOG_POLICY`; an explicitly configured missing, unreadable, or malformed file rejects with `CFG_LOG_POLICY_FAILED` and must be handled as a bootstrap failure.

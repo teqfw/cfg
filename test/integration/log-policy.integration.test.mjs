@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
-import {mkdtemp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
+import {mkdtemp, mkdir, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
-import {join, resolve} from 'node:path';
+import {join} from 'node:path';
 import {test} from 'node:test';
+import {fileURLToPath} from 'node:url';
 
-import CfgLogPolicy from '../../src/Log/Policy.mjs';
-import Levels from '../../../log/src/Enum/Level.mjs';
-import LogPolicy from '../../../log/src/Policy.mjs';
-import LogPolicyFile from '../../../log/src/Policy/File.mjs';
-import {resolveCfg} from '../helpers/di.mjs';
+import Container from '@teqfw/di';
+
+const cfgRoot = fileURLToPath(new URL('../../src', import.meta.url));
+const logRoot = fileURLToPath(new URL('../../node_modules/@teqfw/log/src', import.meta.url));
 
 async function withRoot(operation) {
   const appRoot = await mkdtemp(join(tmpdir(), 'teqfw-cfg-log-'));
@@ -20,11 +20,15 @@ async function withRoot(operation) {
 }
 
 async function runtime(entries = {}) {
-  const cfg = await resolveCfg();
-  await cfg.loader.load([cfg.object.create(entries)]);
-  const policy = new LogPolicy({levels: Levels});
-  const policyFile = new LogPolicyFile({policy, readFile});
-  return {cfg, policy, bridge: new CfgLogPolicy({reader: cfg.reader, policyFile, resolve})};
+  const container = new Container();
+  container.addNamespaceRoot('TeqFw_Cfg_', cfgRoot, '.mjs');
+  container.addNamespaceRoot('TeqFw_Log_', logRoot, '.mjs');
+  const loader = await container.get('TeqFw_Cfg_Loader$');
+  const object = await container.get('TeqFw_Cfg_Source_Object$');
+  await loader.load([object.create(entries)]);
+  const bridge = await container.get('TeqFw_Cfg_Log_Policy$');
+  const policy = await container.get('TeqFw_Log_Policy$');
+  return {bridge, policy};
 }
 
 test('cfg applies the conventional optional etc/log.policy file', async () => {
@@ -59,10 +63,17 @@ test('an explicit missing or malformed logging policy fails clearly', async () =
   await withRoot(async (appRoot) => {
     const missing = join(appRoot, 'missing.policy');
     const absent = await runtime({TEQFW_LOG__POLICY_FILE: missing});
-    await assert.rejects(absent.bridge.apply({appRoot}), (error) => error?.code === 'ENOENT');
+    await assert.rejects(absent.bridge.apply({appRoot}), (error) => error?.code === 'CFG_LOG_POLICY_FAILED' && error.context.field === 'policyFile');
     const bad = join(appRoot, 'bad.policy');
     await writeFile(bad, '*=unexpected\n');
     const malformed = await runtime({TEQFW_LOG__POLICY_FILE: bad});
-    await assert.rejects(malformed.bridge.apply({appRoot}), /level is invalid/);
+    await assert.rejects(malformed.bridge.apply({appRoot}), (error) => error?.code === 'CFG_LOG_POLICY_FAILED' && error.context.field === 'policyFile');
   });
+});
+
+test('invalid logging-policy inputs use the cfg error contract', async () => {
+  const invalidRoot = await runtime();
+  await assert.rejects(invalidRoot.bridge.apply({appRoot: ''}), (error) => error?.code === 'CFG_INVALID_LOG_POLICY' && error.context.field === 'appRoot');
+  const invalidPath = await runtime({TEQFW_LOG__POLICY_FILE: 1});
+  await assert.rejects(invalidPath.bridge.apply({appRoot: '/app'}), (error) => error?.code === 'CFG_INVALID_LOG_POLICY' && error.context.field === 'policyFile');
 });

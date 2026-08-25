@@ -1,7 +1,7 @@
 declare global {
     type TeqFw_Cfg_Enum_Error = typeof import('./src/Enum/Error.mjs').default;
     type TeqFw_Cfg_Error = InstanceType<typeof import('./src/Error.mjs').default>;
-    type TeqFw_Cfg_ErrorCode = 'CFG_INVALID_SOURCE'|'CFG_INVALID_ENTRY'|'CFG_INVALID_SOURCE_ID'|'CFG_INVALID_KEY'|'CFG_INVALID_RAW_VALUE'|'CFG_SOURCE_FAILED'|'CFG_STORE_EMPTY'|'CFG_STORE_LOADING'|'CFG_INVALID_NAMESPACE'|'CFG_LOAD_ALREADY_READY'|'CFG_ILLEGAL_STATE';
+    type TeqFw_Cfg_ErrorCode = 'CFG_INVALID_SOURCE'|'CFG_INVALID_ENTRY'|'CFG_INVALID_SOURCE_ID'|'CFG_INVALID_KEY'|'CFG_INVALID_RAW_VALUE'|'CFG_SOURCE_FAILED'|'CFG_STORE_EMPTY'|'CFG_STORE_LOADING'|'CFG_INVALID_NAMESPACE'|'CFG_INVALID_LOG_POLICY'|'CFG_LOG_POLICY_FAILED'|'CFG_LOAD_ALREADY_READY'|'CFG_ILLEGAL_STATE';
     type TeqFw_Cfg_Error__Class = typeof import('./src/Error.mjs').default;
     type TeqFw_Cfg_Error__DTO = Readonly<Error & {code: TeqFw_Cfg_ErrorCode, context: Readonly<Record<string, string>>}>;
     type TeqFw_Cfg_Key = import('./src/Key.mjs').default;

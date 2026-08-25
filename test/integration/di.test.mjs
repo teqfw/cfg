@@ -48,6 +48,14 @@ test('Loader receives dependencies and shares Store with Reader', async () => {
     assert.deepEqual(store.getSnapshot(), {TEQFW_WEB__PORT: 8080});
 });
 
+test('Error receives the Enum default export through DI', async () => {
+    const container = createContainer();
+    const error = await container.get('TeqFw_Cfg_Error$');
+    const failure = error.create(error.codes.INVALID_NAMESPACE);
+    assert.equal(failure.code, 'CFG_INVALID_NAMESPACE');
+    assert.equal(failure.message, 'Configuration namespace is invalid.');
+});
+
 test('component instances are singleton and Source descriptors are transient', async () => {
     const container = createContainer();
     const firstLoader = await container.get('TeqFw_Cfg_Loader$');

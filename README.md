@@ -26,40 +26,71 @@ That enables:
 
 ## Quick start
 
-Register the `TeqFw_Cfg_` namespace and load the selected Sources once during bootstrap:
+Configure the published `TeqFw_Cfg_` namespace in the host composition root according to `@teqfw/di` or `@teqfw/cli`. The cfg-facing part of a standalone host is an injected bootstrap component:
 
 ```js
-import Container from '@teqfw/di';
+export default class Configuration {
+  constructor({loader, dotenv}) {
+    return {
+      load() {
+        return loader.load([
+          dotenv.create({path: '.env', id: 'project-dotenv'}),
+        ]);
+      },
+    };
+  }
+}
 
-const container = new Container();
-container.addNamespaceRoot('TeqFw_Cfg_', './node_modules/@teqfw/cfg/src', '.mjs');
-
-const loader = await container.get('TeqFw_Cfg_Loader$');
-const dotenv = await container.get('TeqFw_Cfg_Source_DotenvFile$');
-
-await loader.load([
-  dotenv.create({ path: '.env', id: 'project-dotenv' }),
-]);
+export const __deps__ = Object.freeze({
+  default: Object.freeze({
+    loader: 'TeqFw_Cfg_Loader$',
+    dotenv: 'TeqFw_Cfg_Source_DotenvFile$',
+  }),
+});
 ```
 
 Package runtime configurations resolve `TeqFw_Cfg_Reader$` and read detached raw namespace fragments:
 
 ```js
-const reader = await container.get('TeqFw_Cfg_Reader$');
-const web = reader.get('TEQFW_WEB');
-const port = Number(web.PORT ?? '3000');
+export default class WebConfig {
+  constructor({reader}) {
+    const web = reader.get('TEQFW_WEB');
+    return Object.freeze({port: Number(web.PORT ?? '3000')});
+  }
+}
+
+export const __deps__ = Object.freeze({
+  default: Object.freeze({reader: 'TeqFw_Cfg_Reader$'}),
+});
 ```
+
+The host composition root resolves its bootstrap entry point. The bootstrap root and all runtime components receive cfg, log, and application services through declared `__deps__` dependencies.
 
 ## Host logging policy
 
-When `@teqfw/log` is registered alongside cfg, apply the host policy after `Loader.load()`:
+cfg never applies a logging policy by itself. `@teqfw/cli` supplies the host root as `TeqFw_Cli_Config$`, but does not invoke the bridge. In a CLI application, inject both into a lifecycle component that starts after cfg loading:
 
 ```js
-const logPolicy = await container.get('TeqFw_Cfg_Log_Policy$');
-await logPolicy.apply({appRoot});
+export default class LoggingPolicyPlugin {
+  constructor({config, logPolicy}) {
+    return {
+      async onStartup() {
+        await logPolicy.apply({appRoot: config.applicationRoot});
+      },
+      async onShutdown() {},
+    };
+  }
+}
+
+export const __deps__ = Object.freeze({
+  default: Object.freeze({
+    config: 'TeqFw_Cli_Config$',
+    logPolicy: 'TeqFw_Cfg_Log_Policy$',
+  }),
+});
 ```
 
-The conventional optional file is `etc/log.policy` below `appRoot`. Set `TEQFW_LOG__POLICY_FILE=/absolute/or/relative/path` in a selected cfg Source to override it. If the conventional file is absent, cfg preserves log's default `*=info` policy. An explicit missing, unreadable, or invalid file fails bootstrap clearly.
+The conventional optional file is `<applicationRoot>/etc/log.policy`. Set `TEQFW_LOG__POLICY_FILE=/absolute/or/relative/path` in a selected cfg Source to override it. If no policy is applied, log retains its built-in `*=info` threshold: `info` and more severe records are enabled, while `debug` and `trace` are not. An explicit missing, unreadable, or invalid file fails the component startup clearly.
 
 ## Public API
 
@@ -68,6 +99,7 @@ cfg is DI-only and has no root runtime import. The public surface is the `TeqFw_
 - `TeqFw_Cfg_Loader$` — load selected Sources once during bootstrap;
 - `TeqFw_Cfg_Reader$` — read detached raw namespace fragments;
 - `TeqFw_Cfg_Source_Object$`, `TeqFw_Cfg_Source_ProcessEnv$`, `TeqFw_Cfg_Source_DotenvFile$` — built-in Source factories.
+- `TeqFw_Cfg_Log_Policy$` — optionally apply a cfg-resolved policy file to a registered `@teqfw/log` instance after loading.
 
 Do not import `@teqfw/cfg/src/**`.
 

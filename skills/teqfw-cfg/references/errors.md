@@ -26,6 +26,8 @@ They have `name === "CfgError"`. Handle the stable `code` and, when useful, its 
 | `CFG_STORE_EMPTY` | Legacy code retained for compatibility; Store reads no longer emit it. |
 | `CFG_STORE_LOADING` | A read was attempted while loading is in progress. |
 | `CFG_INVALID_NAMESPACE` | Reader received an invalid namespace. |
+| `CFG_INVALID_LOG_POLICY` | Logging-policy bridge input is invalid. |
+| `CFG_LOG_POLICY_FAILED` | Explicit logging-policy application failed. |
 | `CFG_LOAD_ALREADY_READY` | Loading was attempted after a successful load. |
 | `CFG_ILLEGAL_STATE` | An internal Store lifecycle transition was invalid. |
 

@@ -16,7 +16,7 @@ The package owns:
 - immutable internal snapshot storage;
 - namespace projection.
 
-After the snapshot is ready, `TeqFw_Cfg_Log_Policy$` may apply a host policy file to the shared `@teqfw/log` Policy. cfg resolves its location only; log owns rule syntax, validation, filtering, and runtime mutation. This is a dependency from cfg to log, never the reverse.
+After the snapshot is ready, a host-owned component may inject `TeqFw_Cfg_Log_Policy$` and apply a host policy file to the shared `@teqfw/log` Policy. cfg never applies it automatically. cfg resolves its location only; log owns rule syntax, validation, filtering, and runtime mutation. This is a dependency from cfg to log, never the reverse. Without an applied file, log keeps its built-in `*=info` threshold.
 
 The consuming application owns:
 
@@ -27,7 +27,7 @@ The consuming application owns:
 
 ## Explicit Configuration
 
-Process environment and dotenv files are never read implicitly. The composition root creates the desired Source and passes it to `Loader.load()`. This makes precedence, file access, and the moment configuration becomes available explicit.
+Process environment and dotenv files are never read implicitly. In a standalone host, its injected bootstrap component creates the desired Sources and passes them to its injected Loader. This makes precedence, file access, and the moment configuration becomes available explicit. In an `@teqfw/cli` host, CLI owns the Loader call and accepts only declarative Source descriptors from the host configurator.
 
 ## Namespace Keys
 
@@ -45,4 +45,4 @@ For example, `TEQFW_WEB__PORT` belongs to namespace `TEQFW_WEB` and is returned 
 
 ## TeqFW Composition
 
-The package exposes DI modules under the `TeqFw_Cfg_` namespace. A TeqFW container resolves the Loader, Reader, Store, and source factories as singleton services; a source factory creates independent Source descriptors for individual load operations.
+The package exposes DI modules under the `TeqFw_Cfg_` namespace. The composition root uses the container only to resolve a host bootstrap root. That component and all runtime components declare their needed cfg services in `__deps__`; they do not receive or query the container. Loader, Reader, Store, and source factories are singleton services; a source factory creates independent Source descriptors for individual load operations.
