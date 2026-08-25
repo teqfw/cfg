@@ -19,7 +19,6 @@ export default class Store {
     let snapshot = EMPTY_SNAPSHOT;
     /** @type {unknown} */
     let failure;
-    Object.defineProperty(this, "state", { get: () => state });
     /**
      * @returns {TeqFw_Cfg_Store_State}
      */

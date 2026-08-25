@@ -13,7 +13,7 @@ test('package has no root runtime facade or export map', async () => {
 
 test('documented modules expose their default exports and exact dependencies', () => {
     assert.deepEqual(loaderDeps, {default: {error: 'TeqFw_Cfg_Error$', key: 'TeqFw_Cfg_Key$', raw: 'TeqFw_Cfg_Raw$', contract: 'TeqFw_Cfg_Source_Contract$', store: 'TeqFw_Cfg_Store$'}});
-    assert.deepEqual(readerDeps, {default: {error: 'TeqFw_Cfg_Error$', key: 'TeqFw_Cfg_Key$', raw: 'TeqFw_Cfg_Raw$', store: 'TeqFw_Cfg_Store$'}});
+    assert.deepEqual(readerDeps, {default: {key: 'TeqFw_Cfg_Key$', raw: 'TeqFw_Cfg_Raw$', store: 'TeqFw_Cfg_Store$'}});
     assert.deepEqual(storeDeps, {default: {error: 'TeqFw_Cfg_Error$', raw: 'TeqFw_Cfg_Raw$'}});
     assert.deepEqual(objectDeps, {default: {contract: 'TeqFw_Cfg_Source_Contract$'}});
     assert.equal(typeof Loader, 'function');

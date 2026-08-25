@@ -7,12 +7,11 @@
 export default class Reader {
   /**
    * @param {object} deps
-   * @param {TeqFw_Cfg_Error} deps.error
    * @param {TeqFw_Cfg_Key} deps.key
    * @param {TeqFw_Cfg_Raw} deps.raw
    * @param {TeqFw_Cfg_Store} deps.store
    */
-  constructor({ error, key, raw, store }) {
+  constructor({ key, raw, store }) {
     /**
      * @param {unknown} namespace
      * @returns {TeqFw_Cfg_NamespaceFragment}
@@ -39,7 +38,6 @@ export default class Reader {
 }
 export const __deps__ = Object.freeze({
   default: Object.freeze({
-    error: "TeqFw_Cfg_Error$",
     key: "TeqFw_Cfg_Key$",
     raw: "TeqFw_Cfg_Raw$",
     store: "TeqFw_Cfg_Store$",

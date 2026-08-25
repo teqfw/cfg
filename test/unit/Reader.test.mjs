@@ -4,7 +4,6 @@ import Reader from '../../src/Reader.mjs';
 
 test('Reader projects one namespace with detached values', () => {
     const reader = new Reader({
-        error: {},
         key: {assertNamespace: (value) => value, parse: (name) => {
             const boundary = name.indexOf('__');
             return {namespace: name.slice(0, boundary), parameter: name.slice(boundary + 2)};

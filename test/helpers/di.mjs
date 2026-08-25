@@ -21,7 +21,7 @@ export async function resolveCfg() {
     const parser = new DotenvParser();
     const store = new Store({error, raw});
     const loader = new Loader({error, key, raw, contract, store});
-    const reader = new Reader({error, key, raw, store});
+    const reader = new Reader({key, raw, store});
     const object = new ObjectFactory({contract});
     const processEnv = new ProcessEnvFactory({contract, key});
     const dotenv = new DotenvFileFactory({contract, key, parser, readFile});

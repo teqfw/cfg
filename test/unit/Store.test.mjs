@@ -11,6 +11,7 @@ test('Store publishes one frozen snapshot after loading', () => {
     const store = new Store({error: errorService(), raw});
     store.beginLoading();
     store.publish({TEQFW_WEB__PORT: 3000});
+    assert.equal('state' in store, false);
     assert.equal(store.getState(), 'ready');
     assert.deepEqual(store.getSnapshot(), {TEQFW_WEB__PORT: 3000});
     assert.equal(Object.isFrozen(store.getSnapshot()), true);
