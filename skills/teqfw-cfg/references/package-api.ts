@@ -15,6 +15,7 @@ export const PACKAGE_API: PackageApiContract = {
     { cdc: "TeqFw_Cfg_Source_Object$", role: "Factory for explicit programmatic Sources.", methods: [{ name: "create", signature: "create(entries: Record<string, unknown>, id?: string): TeqFw_Cfg_Source", summary: "Creates a Source with id defaulting to 'object'." }] },
     { cdc: "TeqFw_Cfg_Source_ProcessEnv$", role: "Factory for explicitly supplied process-environment Sources.", methods: [{ name: "create", signature: "create(environment: Record<string, unknown>, id?: string): TeqFw_Cfg_Source", summary: "Creates a Source that emits complete cfg keys with string values; id defaults to 'process-env'." }] },
     { cdc: "TeqFw_Cfg_Source_DotenvFile$", role: "Factory for UTF-8 dotenv-file Sources.", methods: [{ name: "create", signature: "create({ path: string, id?: string }): TeqFw_Cfg_Source", summary: "Creates a lazily read dotenv Source; id defaults to 'dotenv-file'." }] },
+    { cdc: "TeqFw_Cfg_Log_Policy$", role: "Optional bridge that applies a cfg-resolved host file to the shared @teqfw/log Policy.", methods: [{ name: "apply", signature: "apply({ appRoot: string }): Promise<{path: string, configured: boolean, applied: boolean}>", summary: "Applies TEQFW_LOG__POLICY_FILE or the optional <appRoot>/etc/log.policy.", constraints: ["Call after Loader.load().", "A missing conventional file is ignored; an explicit file failure rejects."] }] },
   ],
   structuralContracts: [
     { name: "Source", kind: "protocol", summary: "Custom source descriptor consumed by Loader.", fields: { id: "Unique identifier matching [A-Za-z0-9][A-Za-z0-9._:/-]{0,127}.", load: "() => Promise<ReadonlyArray<{key: string; value: RawValue}>>." } },
@@ -22,5 +23,5 @@ export const PACKAGE_API: PackageApiContract = {
     { name: "Configuration Key", kind: "grammar", summary: "Complete key addressed as NAMESPACE__PARAMETER.", values: { segment: "[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*", complete: "SEGMENT__SEGMENT" } },
     { name: "CfgError", kind: "dto", summary: "Frozen stable error with code and safe context.", fields: { name: '"CfgError"', code: "TeqFw_Cfg_ErrorCode", context: "Readonly<Record<string, string>>" } },
   ],
-  operationalNotes: ["No package root import is supported; use the TeqFW DI namespace contract.", "Configuration is never read implicitly from process.env or a dotenv file.", "Store snapshots are immutable; Reader projections are detached and mutable."],
+  operationalNotes: ["No package root import is supported; use the TeqFW DI namespace contract.", "Configuration is never read implicitly from process.env or a dotenv file.", "Store snapshots are immutable; Reader projections are detached and mutable.", "cfg may apply log-owned rules but does not implement the log policy grammar."],
 };

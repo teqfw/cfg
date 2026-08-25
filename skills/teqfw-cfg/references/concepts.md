@@ -16,6 +16,8 @@ The package owns:
 - immutable internal snapshot storage;
 - namespace projection.
 
+After the snapshot is ready, `TeqFw_Cfg_Log_Policy$` may apply a host policy file to the shared `@teqfw/log` Policy. cfg resolves its location only; log owns rule syntax, validation, filtering, and runtime mutation. This is a dependency from cfg to log, never the reverse.
+
 The consuming application owns:
 
 - which Sources it uses and their ordering;

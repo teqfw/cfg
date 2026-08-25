@@ -50,6 +50,17 @@ const web = reader.get('TEQFW_WEB');
 const port = Number(web.PORT ?? '3000');
 ```
 
+## Host logging policy
+
+When `@teqfw/log` is registered alongside cfg, apply the host policy after `Loader.load()`:
+
+```js
+const logPolicy = await container.get('TeqFw_Cfg_Log_Policy$');
+await logPolicy.apply({appRoot});
+```
+
+The conventional optional file is `etc/log.policy` below `appRoot`. Set `TEQFW_LOG__POLICY_FILE=/absolute/or/relative/path` in a selected cfg Source to override it. If the conventional file is absent, cfg preserves log's default `*=info` policy. An explicit missing, unreadable, or invalid file fails bootstrap clearly.
+
 ## Public API
 
 cfg is DI-only and has no root runtime import. The public surface is the `TeqFw_Cfg_` namespace:

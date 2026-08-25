@@ -60,3 +60,7 @@ Use a custom Source only with a unique id and asynchronous `load()`. Read [Sourc
 - A ready Store rejects later loads with `CFG_LOAD_ALREADY_READY`.
 - A failed load is terminal; subsequent reads and loads expose the original failure.
 - `Reader.get()` before loading returns a detached empty fragment; during loading it throws `CFG_STORE_LOADING`.
+
+## Apply Host Logging Policy
+
+After `Loader.load()` resolves, call `TeqFw_Cfg_Log_Policy$.apply({appRoot})`. It first uses `TEQFW_LOG__POLICY_FILE` when configured; otherwise it tries the optional `<appRoot>/etc/log.policy`. A missing conventional file leaves `@teqfw/log` at its built-in `*=info` policy. An explicitly configured missing, unreadable, or malformed file rejects and must be handled as a bootstrap failure.
