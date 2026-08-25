@@ -43,9 +43,9 @@ test('suite discovery skips ENOENT but propagates other filesystem errors', asyn
     }}), (error) => error.code === 'EACCES');
 });
 
-test('suite discovery selects only explicit test files in deterministic order', async () => {
+test('suite discovery recursively selects only explicit test files in deterministic order', async () => {
     const {discoverSuite} = await import('../run-suite.mjs');
     assert.deepEqual(await discoverSuite('unit', {
-        readdirFn: async () => ['z.test.mjs', 'helper.mjs', 'a.test.mjs'],
-    }), ['test/unit/a.test.mjs', 'test/unit/z.test.mjs']);
+        readdirFn: async () => ['z.test.mjs', 'Source/one.test.mjs', 'helper.mjs', 'a.test.mjs'],
+    }), ['test/unit/Source/one.test.mjs', 'test/unit/a.test.mjs', 'test/unit/z.test.mjs']);
 });

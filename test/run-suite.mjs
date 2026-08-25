@@ -7,7 +7,7 @@ import {pathToFileURL} from 'node:url';
 export async function discoverSuite(suite, {readdirFn = readdir} = {}) {
     const directory = join('test', suite);
     try {
-        return (await readdirFn(directory))
+        return (await readdirFn(directory, {recursive: true}))
             .filter((name) => name.endsWith('.test.mjs'))
             .sort()
             .map((name) => join(directory, name));
