@@ -10,11 +10,11 @@ declare global {
     type TeqFw_Cfg_Loader = import('./src/Loader.mjs').default;
     type TeqFw_Cfg_Loader__Class = typeof import('./src/Loader.mjs').default;
     type TeqFw_Cfg_Log_Policy = import('./src/Log/Policy.mjs').default;
-    type TeqFw_Cfg_Log_Policy__Class = typeof import('./src/Log/Policy.mjs').default;
     type TeqFw_Cfg_Log_Policy_File = Readonly<{apply(path: string): Promise<void>}>;
-    type TeqFw_Cfg_Log_Policy_Resolve = (path: string, ...parts: string[]) => string;
     type TeqFw_Cfg_Log_Policy_Options = Readonly<{appRoot: string}>;
+    type TeqFw_Cfg_Log_Policy_Resolve = (path: string, ...parts: string[]) => string;
     type TeqFw_Cfg_Log_Policy_Result = Readonly<{path: string, configured: boolean, applied: boolean}>;
+    type TeqFw_Cfg_Log_Policy__Class = typeof import('./src/Log/Policy.mjs').default;
     /** Detached raw namespace data; cfg does not freeze or cache returned fragments. */
     type TeqFw_Cfg_NamespaceFragment = Readonly<Record<string, TeqFw_Cfg_RawValue>>;
     type TeqFw_Cfg_Node_Fs__ReadFile = (path: string) => Promise<Uint8Array>;
