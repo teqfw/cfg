@@ -76,7 +76,7 @@ function invalid(error) {
 }
 /**
  * @param {unknown} value
- * @param {WeakSet<object>} active
+ * @param {TeqFw_Cfg_RawWeakSet} active
  * @param {TeqFw_Cfg_Error} error
  * @returns {TeqFw_Cfg_RawValue}
  */
@@ -141,7 +141,7 @@ function copy(value, active, error) {
 }
 /**
  * @param {TeqFw_Cfg_RawValue} value
- * @param {WeakSet<object>} seen
+ * @param {TeqFw_Cfg_RawWeakSet} seen
  * @returns {TeqFw_Cfg_RawValue}
  */
 function freeze(value, seen) {

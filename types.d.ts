@@ -22,6 +22,7 @@ declare global {
     type TeqFw_Cfg_RawEntry = Readonly<{key: string, value: TeqFw_Cfg_RawValue}>;
     type TeqFw_Cfg_RawPrimitive = string | number | boolean | null;
     type TeqFw_Cfg_RawSnapshot = Readonly<Record<string, TeqFw_Cfg_RawValue>>;
+    type TeqFw_Cfg_RawWeakSet = WeakSet<object>;
     type TeqFw_Cfg_RawValue = TeqFw_Cfg_RawPrimitive | ReadonlyArray<TeqFw_Cfg_RawValue> | Readonly<Record<string, TeqFw_Cfg_RawValue>>;
     type TeqFw_Cfg_Raw__Class = typeof import('./src/Raw.mjs').default;
     type TeqFw_Cfg_Reader = import('./src/Reader.mjs').default;

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import Container from '@teqfw/di';
 import NamespaceRegistry from '@teqfw/di/node/registry/namespace';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -27,14 +28,24 @@ test('documented cfg CDC tokens resolve through a real TeqFW container', async (
 });
 
 test('package namespace metadata is discovered by the DI registry', async () => {
-    const appRoot = fileURLToPath(new URL('../../', import.meta.url));
-    const registry = new NamespaceRegistry({fs, path, appRoot});
-    const entry = (await registry.build()).find(({prefix}) => prefix === 'TeqFw_Cfg_');
-    assert.deepEqual(entry, {
-        prefix: 'TeqFw_Cfg_',
-        dirAbs: sourceRoot,
-        ext: '.mjs',
-    });
+    const packageJson = JSON.parse(await fs.readFile(new URL('../../package.json', import.meta.url), 'utf8'));
+    const appRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'teqfw-cfg-namespace-'));
+    try {
+        await fs.mkdir(path.join(appRoot, 'src'));
+        await fs.writeFile(path.join(appRoot, 'package.json'), JSON.stringify({
+            name: packageJson.name,
+            teqfw: packageJson.teqfw,
+        }));
+        const registry = new NamespaceRegistry({fs, path, appRoot});
+        const entry = (await registry.build()).find(({prefix}) => prefix === 'TeqFw_Cfg_');
+        assert.deepEqual(entry, {
+            prefix: 'TeqFw_Cfg_',
+            dirAbs: path.join(appRoot, 'src'),
+            ext: '.mjs',
+        });
+    } finally {
+        await fs.rm(appRoot, {recursive: true, force: true});
+    }
 });
 
 test('Loader receives dependencies and shares Store with Reader', async () => {

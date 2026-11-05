@@ -53,9 +53,10 @@
     "test:integration": "node test/run-suite.mjs integration",
     "test:acceptance": "node test/run-suite.mjs acceptance",
     "test:publish": "node test/run-suite.mjs publish",
-    "test": "npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish",
+    "test": "npm run check:esm && npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish",
     "typecheck": "tsc -p jsconfig.json",
-    "lint:md": "markdownlint-cli2 \"skills/**/*.md\" \"*.md\""
+    "lint:md": "markdownlint-cli2 \"skills/**/*.md\" \"*.md\"",
+    "check:esm": "teqfw-esm-validator src --profile base"
   },
   "engines": {
     "node": ">=20"
@@ -68,6 +69,7 @@
     "@teqfw/log": ">=2.1.0"
   },
   "devDependencies": {
+    "@flancer32/skill-teqfw-esm-validator": "^0.15.2",
     "@types/node": "^26.1.1",
     "markdownlint-cli2": "^0.23.2",
     "prettier": "^3.9.6",

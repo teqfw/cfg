@@ -10,6 +10,7 @@ test('package is DI-only, targets Node.js 20, and has no dotenv dependency', asy
     assert.equal(pkg.dependencies?.dotenv, undefined);
     assert.equal(pkg.devDependencies?.dotenv, undefined);
     assert.equal(pkg.devDependencies?.['@teqfw/di'], undefined);
+    assert.equal(pkg.devDependencies?.['@flancer32/skill-teqfw-esm-validator'], '^0.15.2');
     assert.equal(pkg.dependencies?.['@teqfw/log'], '>=2.1.0');
     assert.deepEqual(pkg.teqfw?.fw?.di?.namespaces, [{
         prefix: 'TeqFw_Cfg_',
@@ -26,7 +27,8 @@ test('suite scripts explicitly target and compose all intended suites', async ()
     assert.equal(pkg.scripts['test:integration'], 'node test/run-suite.mjs integration');
     assert.equal(pkg.scripts['test:acceptance'], 'node test/run-suite.mjs acceptance');
     assert.equal(pkg.scripts['test:publish'], 'node test/run-suite.mjs publish');
-    assert.equal(pkg.scripts.test, 'npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish');
+    assert.equal(pkg.scripts['check:esm'], 'teqfw-esm-validator src --profile base');
+    assert.equal(pkg.scripts.test, 'npm run check:esm && npm run test:unit && npm run test:integration && npm run test:acceptance && npm run test:publish');
 });
 
 test('suite discovery skips ENOENT but propagates other filesystem errors', async () => {
